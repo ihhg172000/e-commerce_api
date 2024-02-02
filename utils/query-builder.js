@@ -4,10 +4,25 @@ class QueryBuilder {
   constructor(fields) {
     this.fields = fields;
     this.query = {
+      search: {},
       sort: {},
       pagination: {},
     };
   }
+
+  withSearch = (search) => {
+    if (search) {
+      const searchFields = this.fields.strings;
+
+      this.query.search = {
+        $or: searchFields.map((filed) => {
+          return { [filed]: { $regex: new RegExp(search, "i") } };
+        }),
+      };
+    }
+
+    return this;
+  };
 
   withSort = (sort) => {
     if (sort) {
