@@ -1,5 +1,5 @@
 const groupModelFieldsByType = (model, exclude = []) => {
-  exclude = [...exclude, "_v"];
+  exclude = [...exclude, "__v"];
 
   const groupedFields = {
     strings: [],
