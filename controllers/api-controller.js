@@ -3,6 +3,8 @@ const responseStructure = require("../utils/response-structure");
 const findOr404 = require("../utils/find-or-404");
 const findAndUpdateOr404 = require("../utils/find-and-update-or-404");
 const findAndDeleteOr404 = require("../utils/find-and-delete-or-404");
+const QueryBuilder = require("../utils/query-builder");
+const groupModelFieldsByType = require("../utils/group-model-fields-by-type");
 
 class ApiController {
   constructor(model) {
@@ -10,21 +12,30 @@ class ApiController {
   }
 
   retrieveAll = asyncHandler(async (req, res, next) => {
-    const { page = 1, limit = 20 } = req.query;
-    const skip = (page - 1) * limit;
-    const data = await this.model.find({}).skip(skip).limit(limit);
-    const results = data.length;
-    const totalResults = await this.model.countDocuments();
-    const totalPages = Math.ceil(totalResults / limit);
+    const { page, limit, sort } = req.query;
 
-    res.status(200).json(
-      responseStructure.success(data, {
-        page,
-        results,
-        totalPages,
-        totalResults,
-      }),
-    );
+    const query = new QueryBuilder(groupModelFieldsByType(this.model))
+      .withSort(sort)
+      .withPagination(page, limit)
+      .build();
+
+    const data = await this.model
+      .find({})
+      .sort(query.sort)
+      .skip(query.pagination.skip)
+      .limit(query.pagination.limit);
+
+    const totalResults = await this.model.countDocuments();
+    const totalPages = Math.ceil(totalResults / query.pagination.limit);
+
+    const meta = {
+      page: query.pagination.page,
+      results: data.length,
+      totalPages,
+      totalResults,
+    };
+
+    res.status(200).json(responseStructure.success(data, meta));
   });
 
   createOne = asyncHandler(async (req, res, next) => {

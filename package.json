@@ -1,5 +1,5 @@
 {
-  "name": "e-commerce_server",
+  "name": "e-commerce_api",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
