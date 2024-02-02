@@ -14,7 +14,9 @@ class ApiController {
   retrieveAll = asyncHandler(async (req, res, next) => {
     const { search, sort, page, limit, ...filter } = req.query;
 
-    const query = new QueryBuilder(groupModelFieldsByType(this.model))
+    const query = new QueryBuilder(
+      groupModelFieldsByType(this.model, ["_id", "__v"]),
+    )
       .withFilter(filter)
       .withSearch(search)
       .withSort(sort)

@@ -1,11 +1,12 @@
 const groupModelFieldsByType = (model, exclude = []) => {
-  exclude = [...exclude, "__v"];
-
   const groupedFields = {
-    strings: [],
-    numbers: [],
-    booleans: [],
-    dates: [],
+    objectIdFields: [],
+    stringFields: [],
+    numberFields: [],
+    booleanFields: [],
+    arrayFields: [],
+    dateFields: [],
+    mixedFields: [],
   };
 
   for (const fieldName in model.schema.paths) {
@@ -13,9 +14,9 @@ const groupModelFieldsByType = (model, exclude = []) => {
 
     const fieldType = model.schema.paths[fieldName].instance;
 
-    if (["String", "Number", "Boolean", "Date"].includes(fieldType)) {
-      groupedFields[`${fieldType.toLowerCase()}s`].push(fieldName);
-    }
+    groupedFields[
+      fieldType.charAt(0).toLowerCase() + fieldType.slice(1) + "Fields"
+    ].push(fieldName);
   }
 
   return groupedFields;

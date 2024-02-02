@@ -14,10 +14,10 @@ class QueryBuilder {
   withFilter = (filter) => {
     if (filter) {
       const filterFields = [
-        ...this.fields.strings,
-        ...this.fields.numbers,
-        ...this.fields.booleans,
-        ...this.fields.dates,
+        ...this.fields.stringFields,
+        ...this.fields.numberFields,
+        ...this.fields.booleanFields,
+        ...this.fields.dateFields,
       ];
 
       let filterQuery = Object.entries(filter).reduce((acc, [key, value]) => {
@@ -57,7 +57,7 @@ class QueryBuilder {
 
   withSearch = (search) => {
     if (search) {
-      const searchFields = this.fields.strings;
+      const searchFields = this.fields.stringFields;
 
       const searchQuery = {
         $or: searchFields.map((filed) => {
@@ -74,9 +74,9 @@ class QueryBuilder {
   withSort = (sort) => {
     if (sort) {
       const sortFields = [
-        ...this.fields.strings,
-        ...this.fields.numbers,
-        ...this.fields.dates,
+        ...this.fields.stringFields,
+        ...this.fields.numberFields,
+        ...this.fields.dateFields,
       ];
 
       const sortQuery = sort
