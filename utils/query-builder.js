@@ -16,8 +16,8 @@ class QueryBuilder {
       const filterFields = [
         ...this.fields.stringFields,
         ...this.fields.numberFields,
-        ...this.fields.booleanFields,
         ...this.fields.dateFields,
+        ...this.fields.booleanFields,
       ];
 
       let filterQuery = Object.entries(filter).reduce((acc, [key, value]) => {
@@ -96,15 +96,7 @@ class QueryBuilder {
 
   withSelect = (select) => {
     if (select) {
-      const selectFields = [
-        ...this.fields.objectIdFields,
-        ...this.fields.stringFields,
-        ...this.fields.numberFields,
-        ...this.fields.booleanFields,
-        ...this.fields.arrayFields,
-        ...this.fields.dateFields,
-        ...this.fields.mixedFields,
-      ];
+      const selectFields = this.fields.allFields;
 
       const selectQuery = select
         .split(",")
