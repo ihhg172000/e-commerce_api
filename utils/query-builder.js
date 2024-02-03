@@ -94,6 +94,34 @@ class QueryBuilder {
     return this;
   };
 
+  withSelect = (select) => {
+    if (select) {
+      const selectFields = [
+        ...this.fields.objectIdFields,
+        ...this.fields.stringFields,
+        ...this.fields.numberFields,
+        ...this.fields.booleanFields,
+        ...this.fields.arrayFields,
+        ...this.fields.dateFields,
+        ...this.fields.mixedFields,
+      ];
+
+      const selectQuery = select
+        .split(",")
+        .filter((field) => {
+          return (
+            selectFields.includes(field) ||
+            selectFields.includes(field.slice(1))
+          );
+        })
+        .join(" ");
+
+      this.query.select = selectQuery;
+    }
+
+    return this;
+  };
+
   withPagination = (page = 1, limit = 20) => {
     const skip = (page - 1) * limit;
 

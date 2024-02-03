@@ -12,7 +12,7 @@ class ApiController {
   }
 
   retrieveAll = asyncHandler(async (req, res, next) => {
-    const { search, sort, page, limit, ...filter } = req.query;
+    const { search, sort, select, page, limit, ...filter } = req.query;
 
     const query = new QueryBuilder(
       groupModelFieldsByType(this.model, ["_id", "__v"]),
@@ -20,12 +20,14 @@ class ApiController {
       .withFilter(filter)
       .withSearch(search)
       .withSort(sort)
+      .withSelect(select)
       .withPagination(page, limit)
       .build();
 
     const data = await this.model
       .find({ ...query.filter, ...query.search })
       .sort(query.sort)
+      .select(query.select)
       .skip(query.pagination.skip)
       .limit(query.pagination.limit);
 
