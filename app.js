@@ -12,6 +12,8 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/images", express.static("uploads/images"));
+
 app.use("/api/v1/brands", brandsRouter);
 app.use("/api/v1/categories", categoriesRouter);
 

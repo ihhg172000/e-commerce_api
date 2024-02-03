@@ -13,6 +13,10 @@ const brandSchema = new mongoose.Schema({
     type: String,
     lowercase: true,
   },
+  logoPath: {
+    type: String,
+    default: null,
+  },
 });
 
 brandSchema.set("timestamps", true);

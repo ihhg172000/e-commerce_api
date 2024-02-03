@@ -3,18 +3,30 @@ const brandsController = require("../controllers/brands-controller");
 const methodNotAllowedHandler = require("../middelwares/method-not-allowed-handler");
 const validate = require("../middelwares/validate-middelware");
 const brandValidators = require("../validators/brand-validators");
+const uploadImage = require("../middelwares/upload-image-middelware");
+const saveImage = require("../middelwares/save-image-middelware");
 
 const router = Router();
 
 router
   .route("/")
   .get(brandsController.retrieveAll)
-  .post(validate(brandValidators()), brandsController.createOne);
+  .post(
+    uploadImage.single("logo"),
+    validate(brandValidators()),
+    saveImage(500),
+    brandsController.createOne,
+  );
 
 router
   .route("/:id")
   .get(brandsController.retrieveOne)
-  .patch(validate(brandValidators(true)), brandsController.updateOne)
+  .patch(
+    uploadImage.single("logo"),
+    validate(brandValidators(true)),
+    saveImage(500),
+    brandsController.updateOne,
+  )
   .delete(brandsController.deleteOne);
 
 router.use(methodNotAllowedHandler);
