@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const brandsRouter = require("./routers/brands-router");
 const categoriesRouter = require("./routers/categories-router");
+const productsRouter = require("./routers/products-router");
 const notFoundHandler = require("./middelwares/not-found-handler");
 const errorHandler = require("./middelwares/error-handler");
 
@@ -16,6 +17,7 @@ app.use("/images", express.static("uploads/images"));
 
 app.use("/api/v1/brands", brandsRouter);
 app.use("/api/v1/categories", categoriesRouter);
+app.use("/api/v1/products", productsRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
