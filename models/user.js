@@ -43,6 +43,7 @@ userSchema.set("toJSON", {
     ...ret,
     _id: undefined,
     __v: undefined,
+    password: undefined,
   }),
 });
 

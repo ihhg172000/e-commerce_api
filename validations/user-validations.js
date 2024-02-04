@@ -19,7 +19,7 @@ const updateUserSchema = Joi.object({
   email: Joi.string()
     .email()
     .external(isNotExistsAs(User, "email", "there is a user with this email")),
-  password: Joi.string().min(8),
+  password: Joi.string().min(8).max(32),
   role: Joi.string().valid("user", "maneger", "admin"),
 });
 
