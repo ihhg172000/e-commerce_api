@@ -1,15 +1,9 @@
 const isNotExistsAs =
-  (model, key, options = {}) =>
+  (model, key, message = `${key} is exists`) =>
   async (value, helpers) => {
-    if (!value && options.required === false) {
-      return value;
+    if (value === undefined) {
+      return;
     }
-
-    if (!value && options.required === true) {
-      return helpers.error("any.required");
-    }
-
-    const message = options.message || `${key} is exists`;
 
     try {
       const exists = await model.exists({ [key]: value });
