@@ -6,11 +6,11 @@ const responseStructure = {
       meta,
     };
   },
-  error: (message, details) => {
+  error: (message, errors) => {
     return {
       success: false,
       message,
-      details,
+      errors,
     };
   },
 };

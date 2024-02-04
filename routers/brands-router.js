@@ -2,7 +2,10 @@ const { Router } = require("express");
 const brandsController = require("../controllers/brands-controller");
 const methodNotAllowedHandler = require("../middelwares/method-not-allowed-handler");
 const validate = require("../middelwares/validate-middelware");
-const brandValidators = require("../validators/brand-validators");
+const {
+  createBrandSchema,
+  updateBrandSchema,
+} = require("../validations/brand-validations");
 const uploadImage = require("../middelwares/upload-image-middelware");
 const saveImage = require("../middelwares/save-image-middelware");
 
@@ -13,7 +16,7 @@ router
   .get(brandsController.retrieveAll)
   .post(
     uploadImage.single("logo"),
-    validate(brandValidators()),
+    validate(createBrandSchema),
     saveImage(500),
     brandsController.createOne,
   );
@@ -23,7 +26,7 @@ router
   .get(brandsController.retrieveOne)
   .patch(
     uploadImage.single("logo"),
-    validate(brandValidators(true)),
+    validate(updateBrandSchema),
     saveImage(500),
     brandsController.updateOne,
   )
