@@ -1,5 +1,5 @@
-const groupModelFieldsByType = (model, exclude = []) => {
-  const groupedFields = {
+const classifyModelfields = (model, exclude = []) => {
+  const fields = {
     stringFields: [],
     numberFields: [],
     dateFields: [],
@@ -12,7 +12,6 @@ const groupModelFieldsByType = (model, exclude = []) => {
   };
 
   const paths = model.schema.paths;
-  const fieldTypeKeys = Object.keys(groupedFields);
 
   for (const fieldName in paths) {
     if (exclude.includes(fieldName)) continue;
@@ -21,13 +20,14 @@ const groupModelFieldsByType = (model, exclude = []) => {
     const fieldTypeName =
       fieldType.charAt(0).toLowerCase() + fieldType.slice(1) + "Fields";
 
-    if (fieldTypeKeys.includes(fieldTypeName)) {
-      groupedFields[fieldTypeName].push(fieldName);
+    if (fields.hasOwnProperty(fieldTypeName)) {
+      fields[fieldTypeName].push(fieldName);
     }
-    groupedFields.allFields.push(fieldName);
+
+    fields.allFields.push(fieldName);
   }
 
-  return groupedFields;
+  return fields;
 };
 
-module.exports = groupModelFieldsByType;
+module.exports = classifyModelfields;

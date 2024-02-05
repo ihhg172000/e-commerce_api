@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 const bycrypt = require("bcrypt");
 
+const Roles = {
+  USER: "user",
+  MANAGER: "manager",
+  ADMIN: "admin",
+};
+
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -29,7 +35,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "maneger", "admin"],
+    enum: [Roles.USER, Roles.MANAGER, Roles.ADMIN],
     default: "user",
   },
 });
@@ -64,4 +70,4 @@ userSchema.pre("findOneAndUpdate", async function (next) {
 
 const User = mongoose.model("User", userSchema);
 
-module.exports = User;
+module.exports = { User, Roles };

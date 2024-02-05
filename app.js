@@ -1,12 +1,12 @@
 const express = require("express");
 const morgan = require("morgan");
-const brandsRouter = require("./routers/brands-router");
-const categoriesRouter = require("./routers/categories-router");
-const productsRouter = require("./routers/products-router");
-const usersRouter = require("./routers/users-router");
-const authRouter = require("./routers/auth-router");
-const notFoundHandler = require("./middelwares/not-found-handler");
-const errorHandler = require("./middelwares/error-handler");
+const brandsRouter = require("./routers/brandsRouter");
+const categoriesRouter = require("./routers/categoriesRouter");
+const productsRouter = require("./routers/productsRouter");
+const usersRouter = require("./routers/usersRouter");
+const authRouter = require("./routers/authRouter");
+const notFoundHandler = require("./middelwares/notFoundHandler");
+const errorHandler = require("./middelwares/errorHandler");
 
 const app = express();
 

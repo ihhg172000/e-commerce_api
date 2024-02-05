@@ -1,5 +1,5 @@
-const ApiController = require("./api-controller");
-const Category = require("../models/category");
+const ApiController = require("./ApiController");
+const Category = require("../models/Category");
 
 const categoriesController = new ApiController(Category);
 

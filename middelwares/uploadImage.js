@@ -1,6 +1,6 @@
 const multer = require("multer");
 const mime = require("mime-types");
-const ApiError = require("../utils/api-error");
+const ApiError = require("../utils/ApiError");
 
 const memoryStorage = multer.memoryStorage();
 

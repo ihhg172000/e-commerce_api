@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
-const ApiError = require("../utils/api-error");
+const ApiError = require("../utils/ApiError");
 
-const validate = (schema) =>
+const validateSchema = (schema) =>
   asyncHandler(async (req, res, next) => {
     try {
       await schema.validateAsync(req.body, { abortEarly: false });
@@ -12,8 +12,8 @@ const validate = (schema) =>
         message: error.message.replace(new RegExp('"', "g"), ""),
       }));
 
-      throw new ApiError(400, "the request contains invalid data", errors);
+      throw new ApiError(400, "The request contains invalid data", errors);
     }
   });
 
-module.exports = validate;
+module.exports = validateSchema;

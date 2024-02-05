@@ -1,4 +1,4 @@
-const ApiError = require("../utils/api-error");
+const ApiError = require("../utils/ApiError");
 
 const methodNotAllowedHandler = (req, res, next) => {
   throw new ApiError(

@@ -1,10 +1,12 @@
 const asyncHandler = require("express-async-handler");
-const responseStructure = require("../utils/response-structure");
-const findOr404 = require("../utils/find-or-404");
-const findAndUpdateOr404 = require("../utils/find-and-update-or-404");
-const findAndDeleteOr404 = require("../utils/find-and-delete-or-404");
-const QueryBuilder = require("../utils/query-builder");
-const groupModelFieldsByType = require("../utils/group-model-fields-by-type");
+const {
+  findOr404,
+  findAndUpdateOr404,
+  findAndDeleteOr404,
+} = require("../utils/mongooseUtils");
+const classifyModelFields = require("../utils/classifyModelFields");
+const QueryBuilder = require("../utils/QueryBuilder");
+const ResponseBuilder = require("../utils/ResponseBuilder");
 
 class ApiController {
   constructor(model) {
@@ -15,7 +17,7 @@ class ApiController {
     const { search, sort, select, page, limit, ...filter } = req.query;
 
     const query = new QueryBuilder(
-      groupModelFieldsByType(this.model, ["_id", "__v"]),
+      classifyModelFields(this.model, ["_id", "__v"]),
     )
       .withFilter(filter)
       .withSearch(search)
@@ -24,17 +26,15 @@ class ApiController {
       .withPagination(page, limit)
       .build();
 
-    const data = await this.model
-      .find({ ...query.filter, ...query.search })
-      .sort(query.sort)
-      .select(query.select)
-      .skip(query.pagination.skip)
-      .limit(query.pagination.limit);
-
-    const totalResults = await this.model.countDocuments({
-      ...query.filter,
-      ...query.search,
-    });
+    const [data, totalResults] = await Promise.all([
+      this.model
+        .find({ ...query.filter, ...query.search })
+        .sort(query.sort)
+        .select(query.select)
+        .skip(query.pagination.skip)
+        .limit(query.pagination.limit),
+      this.model.countDocuments({ ...query.filter, ...query.search }),
+    ]);
 
     const totalPages = Math.ceil(totalResults / query.pagination.limit);
 
@@ -45,34 +45,38 @@ class ApiController {
       totalResults,
     };
 
-    res.status(200).json(responseStructure.success(data, meta));
+    res
+      .status(200)
+      .json(new ResponseBuilder().withMeta(meta).withData(data).build());
   });
 
   createOne = asyncHandler(async (req, res, next) => {
     const data = await this.model.create(req.body);
 
-    res.status(201).json(responseStructure.success(data));
+    res.status(201).json(new ResponseBuilder().withData(data).build());
   });
 
   retrieveOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const data = await findOr404(this.model, id);
 
-    res.status(200).json(responseStructure.success(data));
+    res.status(200).json(new ResponseBuilder().withData(data).build());
   });
 
   updateOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const data = await findAndUpdateOr404(this.model, id, req.body);
+    const data = await findAndUpdateOr404(this.model, id, req.body, {
+      new: true,
+    });
 
-    res.status(200).json(responseStructure.success(data));
+    res.status(200).json(new ResponseBuilder().withData(data).build());
   });
 
   deleteOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     await findAndDeleteOr404(this.model, id);
 
-    res.status(204).json(responseStructure.success());
+    res.status(204).json(new ResponseBuilder().build());
   });
 }
 
