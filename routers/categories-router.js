@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const categoriesController = require("../controllers/categories-controller");
 const methodNotAllowedHandler = require("../middelwares/method-not-allowed-handler");
+const authenticate = require("../middelwares/authenticate-middelware");
 const validate = require("../middelwares/validate-middelware");
 const {
   createCategorySchema,
@@ -12,13 +13,21 @@ const router = Router();
 router
   .route("/")
   .get(categoriesController.retrieveAll)
-  .post(validate(createCategorySchema), categoriesController.createOne);
+  .post(
+    authenticate,
+    validate(createCategorySchema),
+    categoriesController.createOne,
+  );
 
 router
   .route("/:id")
   .get(categoriesController.retrieveOne)
-  .patch(validate(updateCategorySchema), categoriesController.updateOne)
-  .delete(categoriesController.deleteOne);
+  .patch(
+    authenticate,
+    validate(updateCategorySchema),
+    categoriesController.updateOne,
+  )
+  .delete(authenticate, categoriesController.deleteOne);
 
 router.use(methodNotAllowedHandler);
 

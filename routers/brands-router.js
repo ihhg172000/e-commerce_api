@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const brandsController = require("../controllers/brands-controller");
 const methodNotAllowedHandler = require("../middelwares/method-not-allowed-handler");
+const authenticate = require("../middelwares/authenticate-middelware");
 const validate = require("../middelwares/validate-middelware");
 const {
   createBrandSchema,
@@ -15,6 +16,7 @@ router
   .route("/")
   .get(brandsController.retrieveAll)
   .post(
+    authenticate,
     uploadImage.single("logo"),
     validate(createBrandSchema),
     saveImage(500),
@@ -25,12 +27,13 @@ router
   .route("/:id")
   .get(brandsController.retrieveOne)
   .patch(
+    authenticate,
     uploadImage.single("logo"),
     validate(updateBrandSchema),
     saveImage(500),
     brandsController.updateOne,
   )
-  .delete(brandsController.deleteOne);
+  .delete(authenticate, brandsController.deleteOne);
 
 router.use(methodNotAllowedHandler);
 
