@@ -54,8 +54,14 @@ const authorizedUserAddressCreateSchema = generateAddressSchema({
   userId: { validate: false },
 });
 
+const authorizedUserAddressUpdateSchema = generateAddressSchema({
+  all: { required: false },
+  userId: { validate: false },
+});
+
 module.exports = {
   addressCreateSchema,
   addressUpdateSchema,
   authorizedUserAddressCreateSchema,
+  authorizedUserAddressUpdateSchema,
 };

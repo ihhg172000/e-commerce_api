@@ -1,8 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const {
-  findOr404,
-  findAndUpdateOr404,
-  findAndDeleteOr404,
+  findByIdOr404,
+  findByIdAndUpdateOr404,
+  findByIdAndDeleteOr404,
 } = require("../utils/mongooseUtils");
 const classifyModelFields = require("../utils/classifyModelFields");
 const QueryBuilder = require("../utils/QueryBuilder");
@@ -65,7 +65,7 @@ class ApiController {
 
   retrieveOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const data = await findOr404(this.model, id);
+    const data = await findByIdOr404(this.model, id);
 
     res
       .status(200)
@@ -74,7 +74,7 @@ class ApiController {
 
   updateOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const data = await findAndUpdateOr404(this.model, id, req.body, {
+    const data = await findByIdAndUpdateOr404(this.model, id, req.body, {
       new: true,
     });
 
@@ -85,7 +85,7 @@ class ApiController {
 
   deleteOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    await findAndDeleteOr404(this.model, id);
+    await findByIdAndDeleteOr404(this.model, id);
 
     res.status(204).json(new ResponseBuilder().build());
   });

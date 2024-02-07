@@ -1,35 +1,62 @@
 const mongoose = require("mongoose");
 const ApiError = require("./ApiError");
 
-const notFoundWrapper = async (model, id, action) => {
-  const modelName = model.modelName.toLowerCase();
+const notFoundWrapper = async (model, action) => {
+  const modelName = model.modelName;
 
-  if (mongoose.Types.ObjectId.isValid(id)) {
-    const obj = await action();
+  try {
+    const doc = await action();
 
-    if (obj) {
-      return obj;
+    if (doc) {
+      return doc;
     }
-
-    throw new ApiError(404, `No ${modelName} was found with this id`);
+  } catch (error) {
+    if (error instanceof mongoose.Error.CastError && error.path === "_id") {
+      throw new ApiError(400, `${modelName} id is not valid`);
+    }
   }
 
-  throw new ApiError(400, `${modelName} id is not valid`);
+  throw new ApiError(
+    404,
+    `No ${modelName.toLowerCase()} was found with this id`,
+  );
 };
 
-const findOr404 = (model, id, projection, options) =>
-  notFoundWrapper(model, id, async () => {
+const findByIdOr404 = (model, id, projection, options) =>
+  notFoundWrapper(model, async () => {
     return await model.findById(id, projection, options);
   });
 
-const findAndUpdateOr404 = (model, id, update, options) =>
-  notFoundWrapper(model, id, async () => {
+const findByIdAndUpdateOr404 = (model, id, update, options) =>
+  notFoundWrapper(model, async () => {
     return await model.findByIdAndUpdate(id, update, options);
   });
 
-const findAndDeleteOr404 = (model, id, options) =>
-  notFoundWrapper(model, id, async () => {
+const findByIdAndDeleteOr404 = (model, id, options) =>
+  notFoundWrapper(model, async () => {
     return await model.findByIdAndDelete(id, options);
   });
 
-module.exports = { findOr404, findAndUpdateOr404, findAndDeleteOr404 };
+const findOr404 = (model, conditions, projection, options) =>
+  notFoundWrapper(model, async () => {
+    return await model.findOne(conditions, projection, options);
+  });
+
+const findAndUpdateOr404 = (model, conditions, update, options) =>
+  notFoundWrapper(model, async () => {
+    return await model.findOneAndUpdate(conditions, update, options);
+  });
+
+const findAndDeleteOr404 = (model, conditions, options) =>
+  notFoundWrapper(model, async () => {
+    return await model.findOneAndDelete(conditions, options);
+  });
+
+module.exports = {
+  findByIdOr404,
+  findByIdAndUpdateOr404,
+  findByIdAndDeleteOr404,
+  findOr404,
+  findAndUpdateOr404,
+  findAndDeleteOr404,
+};
