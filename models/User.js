@@ -30,13 +30,11 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minLength: 8,
-    maxLength: 32,
   },
   role: {
     type: String,
     enum: [Roles.USER, Roles.MANAGER, Roles.ADMIN],
-    default: "user",
+    default: Roles.USER,
   },
 });
 
@@ -54,6 +52,8 @@ userSchema.set("toJSON", {
 });
 
 userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
   this.password = await bycrypt.hash(this.password, 12);
   next();
 });

@@ -1,3 +1,5 @@
+const mongoose = require("mongoose");
+
 class QueryBuilder {
   constructor(fields) {
     this.fields = fields;
@@ -18,11 +20,16 @@ class QueryBuilder {
       ...this.fields.numberFields,
       ...this.fields.dateFields,
       ...this.fields.booleanFields,
+      ...this.fields.objectIdFields,
     ];
 
     Object.entries(filter).forEach(([key, value]) => {
       if (filterFields.includes(key)) {
-        if (typeof value === "object" && !Array.isArray(value)) {
+        if (
+          typeof value === "object" &&
+          !Array.isArray(value) &&
+          !mongoose.Types.ObjectId.isValid(value)
+        ) {
           Object.entries(value).forEach(([op, v]) => {
             if (["gt", "gte", "lt", "lte"].includes(op)) {
               this.query.filter[key] = {

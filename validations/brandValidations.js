@@ -5,8 +5,8 @@ const { isNotExistsAs } = require("./existenceValidators");
 const createBrandSchema = Joi.object({
   name: Joi.string()
     .max(128)
-    .required()
-    .external(isNotExistsAs(Brand, "name", "There is a brand with this name")),
+    .external(isNotExistsAs(Brand, "name", "There is a brand with this name"))
+    .required(),
 });
 
 const updateBrandSchema = Joi.object({

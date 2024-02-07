@@ -20,7 +20,7 @@ const updateUserSchema = Joi.object({
     .email()
     .external(isNotExistsAs(User, "email", "There is a user with this email")),
   password: Joi.string().min(8).max(32),
-  role: Joi.string().valid(Roles.USER, Roles.MANAGER, Roles.ADMIN),
+  role: Joi.string().trim().valid(Roles.USER, Roles.MANAGER, Roles.ADMIN),
 });
 
 module.exports = { createUserSchema, updateUserSchema };

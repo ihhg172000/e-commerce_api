@@ -32,6 +32,8 @@ brandSchema.set("toJSON", {
 });
 
 brandSchema.pre("save", function (next) {
+  if (!this.isModified("name")) return next();
+
   this.slug = slugify(this.name);
   next();
 });

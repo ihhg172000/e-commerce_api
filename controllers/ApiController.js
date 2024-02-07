@@ -38,7 +38,7 @@ class ApiController {
 
     const totalPages = Math.ceil(totalResults / query.pagination.limit);
 
-    const meta = {
+    const pagination = {
       page: query.pagination.page,
       results: data.length,
       totalPages,
@@ -47,20 +47,29 @@ class ApiController {
 
     res
       .status(200)
-      .json(new ResponseBuilder().withMeta(meta).withData(data).build());
+      .json(
+        new ResponseBuilder()
+          .withMeta(pagination, "pagination")
+          .withData(data, this.model.modelName)
+          .build(),
+      );
   });
 
   createOne = asyncHandler(async (req, res, next) => {
     const data = await this.model.create(req.body);
 
-    res.status(201).json(new ResponseBuilder().withData(data).build());
+    res
+      .status(201)
+      .json(new ResponseBuilder().withData(data, this.model.modelName).build());
   });
 
   retrieveOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const data = await findOr404(this.model, id);
 
-    res.status(200).json(new ResponseBuilder().withData(data).build());
+    res
+      .status(200)
+      .json(new ResponseBuilder().withData(data, this.model.modelName).build());
   });
 
   updateOne = asyncHandler(async (req, res, next) => {
@@ -69,7 +78,9 @@ class ApiController {
       new: true,
     });
 
-    res.status(200).json(new ResponseBuilder().withData(data).build());
+    res
+      .status(200)
+      .json(new ResponseBuilder().withData(data, this.model.modelName).build());
   });
 
   deleteOne = asyncHandler(async (req, res, next) => {

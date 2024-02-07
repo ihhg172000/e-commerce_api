@@ -1,3 +1,5 @@
+const pluralize = require("pluralize");
+
 class ResponseBuilder {
   constructor(success = true) {
     this.response = {
@@ -15,13 +17,27 @@ class ResponseBuilder {
     return this;
   };
 
-  withMeta = (meta) => {
-    this.response.meta = meta;
+  withMeta = (meta, noun) => {
+    if (!this.response.hasOwnProperty("meta")) {
+      this.response.meta = {};
+    }
+
+    noun = noun.toLowerCase();
+    const many = Array.isArray(meta);
+
+    this.response.meta[many ? pluralize(noun) : noun] = meta;
     return this;
   };
 
-  withData = (data) => {
-    this.response.data = data;
+  withData = (data, noun) => {
+    if (!this.response.hasOwnProperty("data")) {
+      this.response.data = {};
+    }
+
+    noun = noun.toLowerCase();
+    const many = Array.isArray(data);
+
+    this.response.data[many ? pluralize(noun) : noun] = data;
     return this;
   };
 

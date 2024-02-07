@@ -5,10 +5,10 @@ const { isNotExistsAs } = require("./existenceValidators");
 const createCategorySchema = Joi.object({
   name: Joi.string()
     .max(128)
-    .required()
     .external(
       isNotExistsAs(Category, "name", "There is a category with this name"),
-    ),
+    )
+    .required(),
 });
 
 const updateCategorySchema = Joi.object({

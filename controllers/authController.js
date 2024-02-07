@@ -13,7 +13,14 @@ const signUp = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
   const token = generateToken({ email: user.email });
 
-  res.status(201).json(new ResponseBuilder().withData({ user, token }).build());
+  res
+    .status(201)
+    .json(
+      new ResponseBuilder()
+        .withData(user, "user")
+        .withData(token, "token")
+        .build(),
+    );
 });
 
 const signIn = asyncHandler(async (req, res, next) => {
@@ -26,7 +33,14 @@ const signIn = asyncHandler(async (req, res, next) => {
 
   const token = generateToken({ email: user.email });
 
-  res.status(200).json(new ResponseBuilder().withData({ user, token }).build());
+  res
+    .status(200)
+    .json(
+      new ResponseBuilder()
+        .withData(user, "user")
+        .withData(token, "token")
+        .build(),
+    );
 });
 
 module.exports = { signUp, signIn };
