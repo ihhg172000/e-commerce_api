@@ -1,12 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
+const authRouter = require("./routers/authRouter");
 const meRouter = require("./routers/meRouter");
+const myRouter = require("./routers/myRouter");
+const usersRouter = require("./routers/usersRouter");
+const addressesRouter = require("./routers/addressesRouter");
 const brandsRouter = require("./routers/brandsRouter");
 const categoriesRouter = require("./routers/categoriesRouter");
 const productsRouter = require("./routers/productsRouter");
-const usersRouter = require("./routers/usersRouter");
-const authRouter = require("./routers/authRouter");
-const addressesRouter = require("./routers/addressesRouter");
 const notFoundHandler = require("./middelwares/notFoundHandler");
 const errorHandler = require("./middelwares/errorHandler");
 
@@ -20,13 +21,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/images", express.static("uploads/images"));
 
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/me", meRouter);
+app.use("/api/v1/my", myRouter);
+app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/addresses", addressesRouter);
 app.use("/api/v1/brands", brandsRouter);
 app.use("/api/v1/categories", categoriesRouter);
 app.use("/api/v1/products", productsRouter);
-app.use("/api/v1/users", usersRouter);
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/addresses", addressesRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

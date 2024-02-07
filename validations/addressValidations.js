@@ -50,4 +50,12 @@ const generateAddressSchema = (options = {}) => {
 const addressCreateSchema = generateAddressSchema();
 const addressUpdateSchema = generateAddressSchema({ all: { required: false } });
 
-module.exports = { addressCreateSchema, addressUpdateSchema };
+const authorizedUserAddressCreateSchema = generateAddressSchema({
+  userId: { validate: false },
+});
+
+module.exports = {
+  addressCreateSchema,
+  addressUpdateSchema,
+  authorizedUserAddressCreateSchema,
+};
