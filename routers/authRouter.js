@@ -5,7 +5,7 @@ const validateSchema = require("../middelwares/schemaValidation");
 const {
   signUpSchema,
   signInSchema,
-} = require("../validations/authValidations");
+} = require("../validations/userValidations");
 
 const router = Router();
 
