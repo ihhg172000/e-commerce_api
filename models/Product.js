@@ -3,15 +3,15 @@ const mongoose = require("mongoose");
 const productSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
     maxLength: 256,
     trim: true,
+    required: true,
   },
   description: {
     type: String,
-    required: true,
     maxLength: 1024,
     trim: true,
+    required: true,
   },
   quantity: {
     type: Number,
@@ -20,6 +20,14 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
+  },
+  coverImage: {
+    type: String,
+    required: true,
+  },
+  images: {
+    type: [String],
+    default: null,
   },
   brandId: {
     type: mongoose.Schema.Types.ObjectId,

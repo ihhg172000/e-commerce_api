@@ -4,16 +4,16 @@ const slugify = require("slugify");
 const brandSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
     unique: true,
     maxLength: 128,
     trim: true,
+    required: true,
   },
   slug: {
     type: String,
     lowercase: true,
   },
-  logoPath: {
+  logo: {
     type: String,
     default: null,
   },

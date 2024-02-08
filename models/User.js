@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
     enum: [Roles.USER, Roles.MANAGER, Roles.ADMIN],
     default: Roles.USER,
   },
+  avatar: {
+    type: String,
+    default: null,
+  },
 });
 
 userSchema.set("timestamps", true);

@@ -7,8 +7,8 @@ const {
   createBrandSchema,
   updateBrandSchema,
 } = require("../validations/brandValidations");
-const uploadImage = require("../middelwares/uploadImage");
-const saveImage = require("../middelwares/saveImage");
+const uploadImage = require("../middelwares/uploadImageMiddelware");
+const resizeAndSaveImage = require("../middelwares/resizeAndSaveImageMiddleware");
 
 const router = Router();
 
@@ -19,7 +19,7 @@ router
     authorizeManager,
     uploadImage.single("logo"),
     validateSchema(createBrandSchema),
-    saveImage(500),
+    resizeAndSaveImage({ logo: { width: 300 } }),
     brandsController.createOne,
   );
 
@@ -30,7 +30,7 @@ router
     authorizeManager,
     uploadImage.single("logo"),
     validateSchema(updateBrandSchema),
-    saveImage(500),
+    resizeAndSaveImage({ logo: { width: 300 } }),
     brandsController.updateOne,
   )
   .delete(authorizeManager, brandsController.deleteOne);

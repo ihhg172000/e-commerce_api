@@ -4,6 +4,8 @@ const usersController = require("../controllers/usersController");
 const { authorizeUser } = require("../middelwares/roleAuthorization");
 const validateSchema = require("../middelwares/schemaValidation");
 const { updateProfileSchema } = require("../validations/userValidations");
+const uploadImage = require("../middelwares/uploadImageMiddelware");
+const resizeAndSaveImage = require("../middelwares/resizeAndSaveImageMiddleware");
 
 const router = Router();
 
@@ -12,7 +14,9 @@ router
   .get(authorizeUser, usersController.retrieveAuthorizedUser)
   .patch(
     authorizeUser,
+    uploadImage.single("avatar"),
     validateSchema(updateProfileSchema),
+    resizeAndSaveImage({ avatar: { width: 480, height: 480 } }),
     usersController.updateAuthorizedUser,
   )
   .delete(authorizeUser, usersController.deleteAuthorizedUser);
