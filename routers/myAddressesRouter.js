@@ -4,8 +4,8 @@ const addressesController = require("../controllers/addressesController");
 const { authorizeUser } = require("../middelwares/roleAuthorization");
 const validateSchema = require("../middelwares/schemaValidation");
 const {
-  authorizedUserAddressCreateSchema,
-  authorizedUserAddressUpdateSchema,
+  authorizedUserCreateAddressSchema,
+  authorizedUserUpdateAddressSchema,
 } = require("../validations/addressValidations");
 
 const router = Router();
@@ -15,7 +15,7 @@ router
   .get(authorizeUser, addressesController.retrieveAddressesForAuthorizedUser)
   .post(
     authorizeUser,
-    validateSchema(authorizedUserAddressCreateSchema),
+    validateSchema(authorizedUserCreateAddressSchema),
     addressesController.createAddressForAuthorizedUser,
   );
 
@@ -24,7 +24,7 @@ router
   .get(authorizeUser, addressesController.retrieveAddressForAuthorizedUser)
   .patch(
     authorizeUser,
-    validateSchema(authorizedUserAddressUpdateSchema),
+    validateSchema(authorizedUserUpdateAddressSchema),
     addressesController.updateAddressForAuthorizedUser,
   )
   .delete(authorizeUser, addressesController.deleteAddressForAuthorizedUser);

@@ -4,8 +4,8 @@ const methodNotAllowedHandler = require("../middelwares/methodNotAllowedHandler"
 const { authorizeManager } = require("../middelwares/roleAuthorization");
 const validateSchema = require("../middelwares/schemaValidation");
 const {
-  categoryCreateSchema,
-  categoryUpdateSchema,
+  createCategorySchema,
+  updateCategorySchema,
 } = require("../validations/categoryValidations");
 
 const router = Router();
@@ -15,7 +15,7 @@ router
   .get(categoriesController.retrieveAll)
   .post(
     authorizeManager,
-    validateSchema(categoryCreateSchema),
+    validateSchema(createCategorySchema),
     categoriesController.createOne,
   );
 
@@ -24,7 +24,7 @@ router
   .get(categoriesController.retrieveOne)
   .patch(
     authorizeManager,
-    validateSchema(categoryUpdateSchema),
+    validateSchema(updateCategorySchema),
     categoriesController.updateOne,
   )
   .delete(authorizeManager, categoriesController.deleteOne);

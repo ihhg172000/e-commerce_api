@@ -7,8 +7,8 @@ const {
   authorizeAdmin,
 } = require("../middelwares/roleAuthorization");
 const {
-  addressCreateSchema,
-  addressUpdateSchema,
+  createAddressSchema,
+  updateAddressSchema,
 } = require("../validations/addressValidations");
 
 const router = Router();
@@ -18,7 +18,7 @@ router
   .get(authorizeManager, addressesController.retrieveAll)
   .post(
     authorizeAdmin,
-    validateSchema(addressCreateSchema),
+    validateSchema(createAddressSchema),
     addressesController.createOne,
   );
 
@@ -27,7 +27,7 @@ router
   .get(authorizeManager, addressesController.retrieveOne)
   .patch(
     authorizeAdmin,
-    validateSchema(addressUpdateSchema),
+    validateSchema(updateAddressSchema),
     addressesController.updateOne,
   )
   .delete(authorizeAdmin, addressesController.deleteOne);

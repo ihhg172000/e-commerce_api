@@ -4,8 +4,8 @@ const methodNotAllowedHandler = require("../middelwares/methodNotAllowedHandler"
 const { authorizeManager } = require("../middelwares/roleAuthorization");
 const validateSchema = require("../middelwares/schemaValidation");
 const {
-  brandCreateSchema,
-  brandUpdateSchema,
+  createBrandSchema,
+  updateBrandSchema,
 } = require("../validations/brandValidations");
 const uploadImage = require("../middelwares/uploadImage");
 const saveImage = require("../middelwares/saveImage");
@@ -18,7 +18,7 @@ router
   .post(
     authorizeManager,
     uploadImage.single("logo"),
-    validateSchema(brandCreateSchema),
+    validateSchema(createBrandSchema),
     saveImage(500),
     brandsController.createOne,
   );
@@ -29,7 +29,7 @@ router
   .patch(
     authorizeManager,
     uploadImage.single("logo"),
-    validateSchema(brandUpdateSchema),
+    validateSchema(updateBrandSchema),
     saveImage(500),
     brandsController.updateOne,
   )
