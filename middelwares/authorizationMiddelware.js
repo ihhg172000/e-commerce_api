@@ -1,10 +1,10 @@
-const asyncHandler = require("express-async-handler");
-const jwt = require("jsonwebtoken");
-const config = require("../config");
-const { User, Roles } = require("../models/User");
-const ApiError = require("../utils/ApiError");
+import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
+import config from "../config.js";
+import User from "../models/User.js";
+import ApiError from "../utils/ApiError.js";
 
-const authorizeRoles = (...roles) =>
+const authorize = (superuser = false) =>
   asyncHandler(async (req, res, next) => {
     const { authorization } = req.headers;
 
@@ -22,7 +22,7 @@ const authorizeRoles = (...roles) =>
         throw new ApiError(401, "User not found or has been removed.");
       }
 
-      if (!roles.includes(user.role)) {
+      if (superuser && !user.isSuperuser) {
         throw new ApiError(
           403,
           "You are not authorized to access this resource.",
@@ -42,8 +42,7 @@ const authorizeRoles = (...roles) =>
     }
   });
 
-const authorizeUser = authorizeRoles(Roles.USER, Roles.MANAGER, Roles.ADMIN);
-const authorizeManager = authorizeRoles(Roles.MANAGER, Roles.ADMIN);
-const authorizeAdmin = authorizeRoles(Roles.ADMIN);
+const authorizeUser = authorize();
+const authorizeSuperuser = authorize(true);
 
-module.exports = { authorizeUser, authorizeManager, authorizeAdmin };
+export { authorizeUser, authorizeSuperuser };

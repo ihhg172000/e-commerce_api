@@ -1,4 +1,4 @@
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -8,4 +8,4 @@ const config = {
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
 };
 
-module.exports = config;
+export default config;

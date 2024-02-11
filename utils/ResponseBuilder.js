@@ -1,4 +1,4 @@
-const pluralize = require("pluralize");
+import pluralize from "pluralize";
 
 class ResponseBuilder {
   constructor(success = true) {
@@ -49,4 +49,4 @@ class ResponseBuilder {
   build = () => this.response;
 }
 
-module.exports = ResponseBuilder;
+export default ResponseBuilder;

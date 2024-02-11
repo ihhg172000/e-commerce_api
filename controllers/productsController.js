@@ -1,5 +1,5 @@
-const ApiController = require("./ApiController");
-const Product = require("../models/Product");
+import ApiController from "./ApiController.js";
+import Product from "../models/Product.js";
 
 class ProductsController extends ApiController {
   constructor() {
@@ -7,6 +7,4 @@ class ProductsController extends ApiController {
   }
 }
 
-const productsController = new ProductsController();
-
-module.exports = productsController;
+export default new ProductsController();

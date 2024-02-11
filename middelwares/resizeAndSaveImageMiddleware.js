@@ -1,7 +1,7 @@
-const asyncHandler = require("express-async-handler");
-const sharp = require("sharp");
-const mime = require("mime-types");
-const crypto = require("crypto");
+import asyncHandler from "express-async-handler";
+import sharp from "sharp";
+import mime from "mime-types";
+import crypto from "crypto";
 
 const resizeAndSaveSingleImage = async (file, options = {}) => {
   const { fieldname, originalname, buffer } = file;
@@ -76,4 +76,4 @@ const resizeAndSaveImage = (options = {}) =>
     next();
   });
 
-module.exports = resizeAndSaveImage;
+export default resizeAndSaveImage;

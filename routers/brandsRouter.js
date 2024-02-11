@@ -1,14 +1,14 @@
-const { Router } = require("express");
-const brandsController = require("../controllers/brandsController");
-const methodNotAllowedHandler = require("../middelwares/methodNotAllowedHandler");
-const { authorizeManager } = require("../middelwares/roleAuthorization");
-const validateSchema = require("../middelwares/schemaValidation");
-const {
+import { Router } from "express";
+import brandsController from "../controllers/brandsController.js";
+import { authorizeSuperuser } from "../middelwares/authorizationMiddelware.js";
+import validate from "../middelwares/validationMiddelware.js";
+import {
   createBrandSchema,
   updateBrandSchema,
-} = require("../validations/brandValidations");
-const uploadImage = require("../middelwares/uploadImageMiddelware");
-const resizeAndSaveImage = require("../middelwares/resizeAndSaveImageMiddleware");
+} from "../validations/brandValidations.js";
+import uploadImage from "../middelwares/uploadImageMiddelware.js";
+import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 
@@ -16,9 +16,9 @@ router
   .route("/")
   .get(brandsController.retrieveAll)
   .post(
-    authorizeManager,
+    authorizeSuperuser,
     uploadImage.single("logo"),
-    validateSchema(createBrandSchema),
+    validate(createBrandSchema),
     resizeAndSaveImage({ logo: { width: 300 } }),
     brandsController.createOne,
   );
@@ -27,14 +27,14 @@ router
   .route("/:id")
   .get(brandsController.retrieveOne)
   .patch(
-    authorizeManager,
+    authorizeSuperuser,
     uploadImage.single("logo"),
-    validateSchema(updateBrandSchema),
+    validate(updateBrandSchema),
     resizeAndSaveImage({ logo: { width: 300 } }),
     brandsController.updateOne,
   )
-  .delete(authorizeManager, brandsController.deleteOne);
+  .delete(authorizeSuperuser, brandsController.deleteOne);
 
 router.use(methodNotAllowedHandler);
 
-module.exports = router;
+export default router;

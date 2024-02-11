@@ -1,9 +1,7 @@
-const mongoose = require("mongoose");
-const ApiError = require("./ApiError");
+import mongoose from "mongoose";
+import ApiError from "./ApiError.js";
 
-const notFoundWrapper = async (model, action) => {
-  const modelName = model.modelName;
-
+const notFoundWrapper = async (action, modelName) => {
   try {
     const doc = await action();
 
@@ -16,47 +14,17 @@ const notFoundWrapper = async (model, action) => {
     }
   }
 
-  throw new ApiError(
-    404,
-    `No ${modelName.toLowerCase()} was found with this id`,
-  );
+  throw new ApiError(404, `This ${modelName.toLowerCase()} was not found`);
 };
 
-const findByIdOr404 = (model, id, projection, options) =>
-  notFoundWrapper(model, async () => {
-    return await model.findById(id, projection, options);
-  });
+const findByIdOr404 = (model, id) =>
+  notFoundWrapper(() => {
+    return model.findById(id);
+  }, model.modelName);
 
-const findByIdAndUpdateOr404 = (model, id, update, options) =>
-  notFoundWrapper(model, async () => {
-    return await model.findByIdAndUpdate(id, update, options);
-  });
+const findOneOr404 = (model, filter) =>
+  notFoundWrapper(() => {
+    return model.findOne(filter);
+  }, model.modelName);
 
-const findByIdAndDeleteOr404 = (model, id, options) =>
-  notFoundWrapper(model, async () => {
-    return await model.findByIdAndDelete(id, options);
-  });
-
-const findOr404 = (model, conditions, projection, options) =>
-  notFoundWrapper(model, async () => {
-    return await model.findOne(conditions, projection, options);
-  });
-
-const findAndUpdateOr404 = (model, conditions, update, options) =>
-  notFoundWrapper(model, async () => {
-    return await model.findOneAndUpdate(conditions, update, options);
-  });
-
-const findAndDeleteOr404 = (model, conditions, options) =>
-  notFoundWrapper(model, async () => {
-    return await model.findOneAndDelete(conditions, options);
-  });
-
-module.exports = {
-  findByIdOr404,
-  findByIdAndUpdateOr404,
-  findByIdAndDeleteOr404,
-  findOr404,
-  findAndUpdateOr404,
-  findAndDeleteOr404,
-};
+export { findByIdOr404, findOneOr404 };

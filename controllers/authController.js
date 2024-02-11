@@ -1,10 +1,10 @@
-const asyncHandler = require("express-async-handler");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const config = require("../config");
-const { User } = require("../models/User");
-const ApiError = require("../utils/ApiError");
-const ResponseBuilder = require("../utils/ResponseBuilder");
+import asyncHandler from "express-async-handler";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import config from "../config.js";
+import User from "../models/User.js";
+import ApiError from "../utils/ApiError.js";
+import ResponseBuilder from "../utils/ResponseBuilder.js";
 
 const generateToken = (pyload, expiresIn = "15d") =>
   jwt.sign(pyload, config.JWT_SECRET_KEY, { expiresIn });
@@ -43,4 +43,4 @@ const signIn = asyncHandler(async (req, res, next) => {
     );
 });
 
-module.exports = { signUp, signIn };
+export { signIn, signUp };

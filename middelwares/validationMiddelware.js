@@ -1,7 +1,7 @@
-const asyncHandler = require("express-async-handler");
-const ApiError = require("../utils/ApiError");
+import asyncHandler from "express-async-handler";
+import ApiError from "../utils/ApiError.js";
 
-const validateSchema = (schema) =>
+const validate = (schema) =>
   asyncHandler(async (req, res, next) => {
     try {
       await schema.validateAsync(req.body, { abortEarly: false });
@@ -16,4 +16,4 @@ const validateSchema = (schema) =>
     }
   });
 
-module.exports = validateSchema;
+export default validate;

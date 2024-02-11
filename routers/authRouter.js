@@ -1,21 +1,14 @@
-const { Router } = require("express");
-const authController = require("../controllers/authController");
-const methodNotAllowedHandler = require("../middelwares/methodNotAllowedHandler");
-const validateSchema = require("../middelwares/schemaValidation");
-const {
-  signUpSchema,
-  signInSchema,
-} = require("../validations/userValidations");
+import { Router } from "express";
+import { signUp, signIn } from "../controllers/authController.js";
+import validate from "../middelwares/validationMiddelware.js";
+import { signUpSchema, signInSchema } from "../validations/userValidations.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 
-router
-  .route("/signup")
-  .post(validateSchema(signUpSchema), authController.signUp);
-router
-  .route("/signin")
-  .post(validateSchema(signInSchema), authController.signIn);
+router.route("/signup").post(validate(signUpSchema), signUp);
+router.route("/signin").post(validate(signInSchema), signIn);
 
 router.use(methodNotAllowedHandler);
 
-module.exports = router;
+export default router;

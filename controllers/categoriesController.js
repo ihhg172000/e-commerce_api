@@ -1,5 +1,5 @@
-const ApiController = require("./ApiController");
-const Category = require("../models/Category");
+import ApiController from "./ApiController.js";
+import Category from "../models/Category.js";
 
 class CategoriesController extends ApiController {
   constructor() {
@@ -7,6 +7,4 @@ class CategoriesController extends ApiController {
   }
 }
 
-const categoriesController = new CategoriesController();
-
-module.exports = categoriesController;
+export default new CategoriesController();

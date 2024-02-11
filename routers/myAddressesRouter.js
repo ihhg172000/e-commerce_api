@@ -1,34 +1,33 @@
-const { Router } = require("express");
-const methodNotAllowedHandler = require("../middelwares/methodNotAllowedHandler");
-const addressesController = require("../controllers/addressesController");
-const { authorizeUser } = require("../middelwares/roleAuthorization");
-const validateSchema = require("../middelwares/schemaValidation");
-const {
-  authorizedUserCreateAddressSchema,
-  authorizedUserUpdateAddressSchema,
-} = require("../validations/addressValidations");
+import { Router } from "express";
+import addressesController from "../controllers/addressesController.js";
+import { authorizeUser } from "../middelwares/authorizationMiddelware.js";
+import validate from "../middelwares/validationMiddelware.js";
+import {
+  authUserCreateAddressSchema,
+  authUserUpdateAddressSchema,
+} from "../validations/addressValidations.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 
-router
-  .route("/")
-  .get(authorizeUser, addressesController.retrieveAddressesForAuthorizedUser)
-  .post(
-    authorizeUser,
-    validateSchema(authorizedUserCreateAddressSchema),
-    addressesController.createAddressForAuthorizedUser,
-  );
+router.use(authorizeUser);
 
 router
-  .route("/:id")
-  .get(authorizeUser, addressesController.retrieveAddressForAuthorizedUser)
-  .patch(
-    authorizeUser,
-    validateSchema(authorizedUserUpdateAddressSchema),
-    addressesController.updateAddressForAuthorizedUser,
-  )
-  .delete(authorizeUser, addressesController.deleteAddressForAuthorizedUser);
+  .route("/")
+  .get(addressesController.retrieveAddreasesForAuthUser)
+  .post(
+    validate(authUserCreateAddressSchema),
+    addressesController.createAddressForAuthUser,
+  );
+
+router.use("/:addressId", addressesController.findAddressForAuthUser);
+
+router
+  .route("/:addressId")
+  .get(addressesController.retrieveOne)
+  .patch(validate(authUserUpdateAddressSchema), addressesController.updateOne)
+  .delete(addressesController.deleteOne);
 
 router.use(methodNotAllowedHandler);
 
-module.exports = router;
+export default router;

@@ -28,4 +28,4 @@ const isExistsAs = (model, key, message) =>
 const isNotExistsAs = (model, key, message) =>
   checkExistence(model, key, false, message);
 
-module.exports = { isExistsAs, isNotExistsAs };
+export { isExistsAs, isNotExistsAs };

@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const Category = require("../models/Category");
-const { isNotExistsAs } = require("./existenceValidators");
-const SchemaGenerator = require("./SchemaGenerator");
+import Joi from "joi";
+import Category from "../models/Category.js";
+import SchemaGenerator from "./SchemaGenerator.js";
+import { isNotExistsAs } from "./existenceValidators.js";
 
 const validators = {
   name: Joi.string()
@@ -18,4 +18,4 @@ const updateCategorySchema = categorySchemaGenerator.generate({
   all: { required: false },
 });
 
-module.exports = { createCategorySchema, updateCategorySchema };
+export { createCategorySchema, updateCategorySchema };

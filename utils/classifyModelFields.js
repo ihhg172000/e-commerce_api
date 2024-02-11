@@ -30,4 +30,4 @@ const classifyModelfields = (model, exclude = []) => {
   return fields;
 };
 
-module.exports = classifyModelfields;
+export default classifyModelfields;

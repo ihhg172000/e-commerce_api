@@ -1,6 +1,6 @@
-const multer = require("multer");
-const mime = require("mime-types");
-const ApiError = require("../utils/ApiError");
+import multer from "multer";
+import mime from "mime-types";
+import ApiError from "../utils/ApiError.js";
 
 const memoryStorage = multer.memoryStorage();
 
@@ -14,4 +14,4 @@ const imageFilter = (req, file, cb) => {
 
 const uploadImage = multer({ storage: memoryStorage, fileFilter: imageFilter });
 
-module.exports = uploadImage;
+export default uploadImage;

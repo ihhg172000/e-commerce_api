@@ -1,55 +1,75 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const addressSchema = new mongoose.Schema({
-  street: {
-    type: String,
-    maxLength: 256,
-    trim: true,
-    required: true,
+const addressSchema = new mongoose.Schema(
+  {
+    alias: {
+      type: String,
+      maxLength: 128,
+      trim: true,
+      default: null,
+    },
+    street: {
+      type: String,
+      maxLength: 256,
+      trim: true,
+      required: true,
+    },
+    city: {
+      type: String,
+      maxLength: 128,
+      trim: true,
+      required: true,
+    },
+    state: {
+      type: String,
+      maxLength: 128,
+      trim: true,
+      required: true,
+    },
+    country: {
+      type: String,
+      maxLength: 128,
+      trim: true,
+      required: true,
+    },
+    postalCode: {
+      type: String,
+      maxLength: 32,
+      trim: true,
+      required: true,
+    },
+    phone: {
+      type: String,
+      maxLength: 32,
+      trim: true,
+      default: null,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
-  city: {
-    type: String,
-    maxLength: 128,
-    trim: true,
-    required: true,
+  {
+    timestamps: true,
   },
-  state: {
-    type: String,
-    maxLengrh: 128,
-    trim: true,
-    required: true,
-  },
-  country: {
-    type: String,
-    maxLength: 128,
-    trim: true,
-    required: true,
-  },
-  postalCode: {
-    type: String,
-    maxLength: 32,
-    trim: true,
-    required: true,
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-});
-
-addressSchema.set("timestamps", true);
+);
 
 addressSchema.set("toJSON", {
-  getters: true,
-  transform: (doc, ret) => ({
-    id: ret._id,
-    ...ret,
-    _id: undefined,
-    __v: undefined,
+  transform: (doc) => ({
+    id: doc._id,
+    alias: doc.alias,
+    streat: doc.street,
+    city: doc.city,
+    state: doc.state,
+    country: doc.country,
+    postalCode: doc.postalCode,
+    phone: doc.phone,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
   }),
 });
 
 const Address = mongoose.model("Address", addressSchema);
 
-module.exports = Address;
+export default Address;

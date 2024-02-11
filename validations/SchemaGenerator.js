@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 class SchemaGenerator {
   constructor(validators) {
@@ -46,4 +46,4 @@ class SchemaGenerator {
   }
 }
 
-module.exports = SchemaGenerator;
+export default SchemaGenerator;

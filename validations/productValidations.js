@@ -1,8 +1,8 @@
-const Joi = require("joi");
-const Brand = require("../models/Brand");
-const Category = require("../models/Category");
-const { isExistsAs } = require("./existenceValidators");
-const SchemaGenerator = require("./SchemaGenerator");
+import Joi from "joi";
+import Brand from "../models/Brand.js";
+import Category from "../models/Category.js";
+import SchemaGenerator from "./SchemaGenerator.js";
+import { isExistsAs } from "./existenceValidators.js";
 
 const validators = {
   title: Joi.string().max(256),
@@ -28,4 +28,4 @@ const updateProductSchema = brandSchemaGenerator.generate({
   all: { required: false },
 });
 
-module.exports = { createProductSchema, updateProductSchema };
+export { createProductSchema, updateProductSchema };

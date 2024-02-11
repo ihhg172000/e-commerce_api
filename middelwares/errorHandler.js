@@ -1,4 +1,4 @@
-const ResponseBuilder = require("../utils/ResponseBuilder");
+import ResponseBuilder from "../utils/ResponseBuilder.js";
 
 const errorHandler = (err, req, res, next) => {
   const { statusCode = 500, message, errors } = err;
@@ -13,4 +13,4 @@ const errorHandler = (err, req, res, next) => {
     );
 };
 
-module.exports = errorHandler;
+export default errorHandler;

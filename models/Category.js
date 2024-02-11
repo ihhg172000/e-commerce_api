@@ -1,29 +1,32 @@
-const mongoose = require("mongoose");
-const slugify = require("slugify");
+import mongoose from "mongoose";
+import slugify from "slugify";
 
-const categorySchema = new mongoose.Schema({
-  name: {
-    type: String,
-    unique: true,
-    maxLength: 128,
-    trim: true,
-    required: true,
+const categorySchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      maxLength: 128,
+      trim: true,
+      unique: true,
+      required: true,
+    },
+    slug: {
+      type: String,
+      lowercase: true,
+    },
   },
-  slug: {
-    type: String,
-    lowercase: true,
+  {
+    timestamps: true,
   },
-});
-
-categorySchema.set("timestamps", true);
+);
 
 categorySchema.set("toJSON", {
-  getters: true,
-  transform: (doc, ret) => ({
-    id: ret._id,
-    ...ret,
-    _id: undefined,
-    __v: undefined,
+  transform: (doc) => ({
+    id: doc._id,
+    name: doc.name,
+    slug: doc.slug,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
   }),
 });
 
@@ -34,16 +37,6 @@ categorySchema.pre("save", function (next) {
   next();
 });
 
-categorySchema.pre("findOneAndUpdate", function (next) {
-  const update = this.getUpdate();
-
-  if (update.name) {
-    update.slug = slugify(update.name);
-  }
-
-  next();
-});
-
 const Category = mongoose.model("Category", categorySchema);
 
-module.exports = Category;
+export default Category;

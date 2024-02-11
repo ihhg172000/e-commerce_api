@@ -1,69 +1,34 @@
-const asyncHandler = require("express-async-handler");
-const ApiController = require("./ApiController");
-const Address = require("../models/Address");
-const {
-  findOr404,
-  findAndUpdateOr404,
-  findAndDeleteOr404,
-} = require("../utils/mongooseUtils.js");
-const ResponseBuilder = require("../utils/ResponseBuilder");
+import asyncHandler from "express-async-handler";
+import ApiController from "./ApiController.js";
+import Address from "../models/Address.js";
+import { findOneOr404 } from "../utils/mongooseUtils.js";
+import ResponseBuilder from "../utils/ResponseBuilder.js";
 
 class AddressesController extends ApiController {
   constructor() {
     super(Address);
   }
 
-  retrieveAddressesForAuthorizedUser = (req, res, next) => {
+  retrieveAddreasesForAuthUser = (req, res, next) => {
     req.query.userId = req.user._id;
     this.retrieveAll(req, res, next);
   };
 
-  createAddressForAuthorizedUser = (req, res, next) => {
+  createAddressForAuthUser = (req, res, next) => {
     req.body.userId = req.user._id;
     this.createOne(req, res, next);
   };
 
-  retrieveAddressForAuthorizedUser = asyncHandler(async (req, res, next) => {
-    const address = await findOr404(this.model, {
-      _id: req.params.id,
+  findAddressForAuthUser = asyncHandler(async (req, res, next) => {
+    const { addressId } = req.params;
+    const address = await findOneOr404(Address, {
+      _id: addressId,
       userId: req.user._id,
     });
 
-    res
-      .status(200)
-      .json(
-        new ResponseBuilder().withData(address, this.model.modelName).build(),
-      );
-  });
-
-  updateAddressForAuthorizedUser = asyncHandler(async (req, res, next) => {
-    const address = await findAndUpdateOr404(
-      this.model,
-      {
-        _id: req.params.id,
-        userId: req.user._id,
-      },
-      req.body,
-      { new: true },
-    );
-
-    res
-      .status(200)
-      .json(
-        new ResponseBuilder().withData(address, this.model.modelName).build(),
-      );
-  });
-
-  deleteAddressForAuthorizedUser = asyncHandler(async (req, res, next) => {
-    await findAndDeleteOr404(this.model, {
-      _id: req.params.id,
-      userId: req.user._id,
-    });
-
-    res.status(204).json(new ResponseBuilder().build());
+    req.address = address;
+    next();
   });
 }
 
-const addressesController = new AddressesController();
-
-module.exports = addressesController;
+export default new AddressesController();

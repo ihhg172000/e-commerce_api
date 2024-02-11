@@ -1,4 +1,4 @@
-const ApiError = require("../utils/ApiError");
+import ApiError from "../utils/ApiError.js";
 
 const methodNotAllowedHandler = (req, res, next) => {
   throw new ApiError(
@@ -7,4 +7,4 @@ const methodNotAllowedHandler = (req, res, next) => {
   );
 };
 
-module.exports = methodNotAllowedHandler;
+export default methodNotAllowedHandler;

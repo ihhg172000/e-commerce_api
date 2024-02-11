@@ -1,14 +1,14 @@
-const { Router } = require("express");
-const productsController = require("../controllers/productsController");
-const methodNotAllowedHandler = require("../middelwares/methodNotAllowedHandler");
-const { authorizeManager } = require("../middelwares/roleAuthorization");
-const validateSchema = require("../middelwares/schemaValidation");
-const {
+import { Router } from "express";
+import productsController from "../controllers/productsController.js";
+import { authorizeSuperuser } from "../middelwares/authorizationMiddelware.js";
+import validate from "../middelwares/validationMiddelware.js";
+import {
   createProductSchema,
   updateProductSchema,
-} = require("../validations/productValidations");
-const uploadImage = require("../middelwares/uploadImageMiddelware");
-const resizeAndSaveImage = require("../middelwares/resizeAndSaveImageMiddleware");
+} from "../validations/productValidations.js";
+import uploadImage from "../middelwares/uploadImageMiddelware.js";
+import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 
@@ -16,12 +16,12 @@ router
   .route("/")
   .get(productsController.retrieveAll)
   .post(
-    authorizeManager,
+    authorizeSuperuser,
     uploadImage.fields([
       { name: "coverImage", maxCount: 1 },
       { name: "images", maxCount: 4 },
     ]),
-    validateSchema(createProductSchema),
+    validate(createProductSchema),
     resizeAndSaveImage({
       coverImage: { width: 720, height: 720 },
       images: { width: 720, height: 720 },
@@ -33,20 +33,20 @@ router
   .route("/:id")
   .get(productsController.retrieveOne)
   .patch(
-    authorizeManager,
+    authorizeSuperuser,
     uploadImage.fields([
       { name: "coverImage", maxCount: 1 },
       { name: "images", maxCount: 4 },
     ]),
-    validateSchema(updateProductSchema),
+    validate(updateProductSchema),
     resizeAndSaveImage({
       coverImage: { width: 720, height: 720 },
       images: { width: 720, height: 720 },
     }),
     productsController.updateOne,
   )
-  .delete(authorizeManager, productsController.deleteOne);
+  .delete(authorizeSuperuser, productsController.deleteOne);
 
 router.use(methodNotAllowedHandler);
 
-module.exports = router;
+export default router;

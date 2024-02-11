@@ -1,12 +1,8 @@
-const asyncHandler = require("express-async-handler");
-const {
-  findByIdOr404,
-  findByIdAndUpdateOr404,
-  findByIdAndDeleteOr404,
-} = require("../utils/mongooseUtils");
-const classifyModelFields = require("../utils/classifyModelFields");
-const QueryBuilder = require("../utils/QueryBuilder");
-const ResponseBuilder = require("../utils/ResponseBuilder");
+import asyncHandler from "express-async-handler";
+import { findByIdOr404 } from "../utils/mongooseUtils.js";
+import classifyModelFields from "../utils/classifyModelFields.js";
+import QueryBuilder from "../utils/QueryBuilder.js";
+import ResponseBuilder from "../utils/ResponseBuilder.js";
 
 class ApiController {
   constructor(model) {
@@ -26,7 +22,7 @@ class ApiController {
       .withPagination(page, limit)
       .build();
 
-    const [data, totalResults] = await Promise.all([
+    const [docs, totalResults] = await Promise.all([
       this.model
         .find({ ...query.filter, ...query.search })
         .sort(query.sort)
@@ -40,7 +36,7 @@ class ApiController {
 
     const pagination = {
       page: query.pagination.page,
-      results: data.length,
+      results: docs.length,
       totalPages,
       totalResults,
     };
@@ -50,45 +46,55 @@ class ApiController {
       .json(
         new ResponseBuilder()
           .withMeta(pagination, "pagination")
-          .withData(data, this.model.modelName)
+          .withData(docs, this.model.modelName)
           .build(),
       );
   });
 
   createOne = asyncHandler(async (req, res, next) => {
-    const data = await this.model.create(req.body);
+    const doc = await this.model.create(req.body);
 
     res
       .status(201)
-      .json(new ResponseBuilder().withData(data, this.model.modelName).build());
+      .json(new ResponseBuilder().withData(doc, this.model.modelName).build());
   });
 
   retrieveOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const data = await findByIdOr404(this.model, id);
+    const doc = id
+      ? await findByIdOr404(this.model, id)
+      : req[this.model.modelName.toLowerCase()];
 
     res
       .status(200)
-      .json(new ResponseBuilder().withData(data, this.model.modelName).build());
+      .json(new ResponseBuilder().withData(doc, this.model.modelName).build());
   });
 
   updateOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    const data = await findByIdAndUpdateOr404(this.model, id, req.body, {
-      new: true,
-    });
+    const doc = id
+      ? await findByIdOr404(this.model, id)
+      : req[this.model.modelName.toLowerCase()];
+
+    Object.assign(doc, req.body);
+
+    await doc.save();
 
     res
       .status(200)
-      .json(new ResponseBuilder().withData(data, this.model.modelName).build());
+      .json(new ResponseBuilder().withData(doc, this.model.modelName).build());
   });
 
   deleteOne = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
-    await findByIdAndDeleteOr404(this.model, id);
+    const doc = id
+      ? await findByIdOr404(this.model, id)
+      : req[this.model.modelName.toLowerCase()];
+
+    await doc.deleteOne();
 
     res.status(204).json(new ResponseBuilder().build());
   });
 }
 
-module.exports = ApiController;
+export default ApiController;

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 class QueryBuilder {
   constructor(fields) {
@@ -108,4 +108,4 @@ class QueryBuilder {
   build = () => this.query;
 }
 
-module.exports = QueryBuilder;
+export default QueryBuilder;
