@@ -13,7 +13,11 @@ const router = Router();
 router.use(authorizeUser);
 router.use(cartsController.findOrCreateAuthUserCart);
 
-router.route("/").get(cartsController.retrieveOne);
+router
+  .route("/")
+  .get(cartsController.retrieveOne)
+  .patch(cartsController.updateOne)
+  .delete(cartsController.deleteOne);
 
 router
   .route("/items")
