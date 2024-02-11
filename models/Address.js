@@ -59,7 +59,7 @@ addressSchema.set("toJSON", {
   transform: (doc) => ({
     id: doc._id,
     alias: doc.alias,
-    streat: doc.street,
+    street: doc.street,
     city: doc.city,
     state: doc.state,
     country: doc.country,
@@ -70,6 +70,4 @@ addressSchema.set("toJSON", {
   }),
 });
 
-const Address = mongoose.model("Address", addressSchema);
-
-export default Address;
+export default mongoose.model("Address", addressSchema);

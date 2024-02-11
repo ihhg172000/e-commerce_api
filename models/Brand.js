@@ -41,9 +41,8 @@ brandSchema.pre("save", function (next) {
   }
 
   this.slug = slugify(this.name);
+
   next();
 });
 
-const Brand = mongoose.model("Brand", brandSchema);
-
-export default Brand;
+export default mongoose.model("Brand", brandSchema);

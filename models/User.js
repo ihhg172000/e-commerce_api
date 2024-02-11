@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 import bycrypt from "bcrypt";
-import Address from "./Address.js";
-import Cart from "./Cart.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -61,9 +59,8 @@ userSchema.pre("save", async function (next) {
   }
 
   this.password = await bycrypt.hash(this.password, 12);
+
   next();
 });
 
-const User = mongoose.model("User", userSchema);
-
-export default User;
+export default mongoose.model("User", userSchema);

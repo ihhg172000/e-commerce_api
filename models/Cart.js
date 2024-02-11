@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import autoPopulate from "mongoose-autopopulate";
 
-const cartItemSchema = new mongoose.Schema({
+const itemSchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Product",
@@ -13,19 +14,26 @@ const cartItemSchema = new mongoose.Schema({
   },
 });
 
-cartItemSchema.set("toJSON", {
+itemSchema.virtual("product", {
+  ref: "Product",
+  localField: "productId",
+  foreignField: "_id",
+  justOne: true,
+  autopopulate: { select: "title price coverImage" },
+});
+
+itemSchema.set("toJSON", {
+  virtuals: true,
   transform: (doc) => ({
     id: doc._id,
-    productId: doc.productId,
+    product: doc.product,
     quantity: doc.quantity,
   }),
 });
 
 const cartSchema = new mongoose.Schema(
   {
-    items: {
-      type: [cartItemSchema],
-    },
+    items: [itemSchema],
     totalPrice: {
       type: Number,
       min: 0,
@@ -53,24 +61,18 @@ cartSchema.set("toJSON", {
   }),
 });
 
+cartSchema.plugin(autoPopulate);
+
 cartSchema.pre("save", async function (next) {
   if (!this.isModified("items")) {
     return next();
   }
 
-  await this.populate("items.productId", "price");
-
   this.totalPrice = this.items.reduce((totalPrice, item) => {
-    return totalPrice + item.productId.price * item.quantity;
+    return totalPrice + item.product.price * item.quantity;
   }, 0);
-
-  this.items.forEach((item) => {
-    item.productId = item.productId._id;
-  });
 
   next();
 });
 
-const Cart = mongoose.model("Cart", cartSchema);
-
-export default Cart;
+export default mongoose.model("Cart", cartSchema);

@@ -34,9 +34,8 @@ categorySchema.pre("save", function (next) {
   if (!this.isModified("name")) return next();
 
   this.slug = slugify(this.name);
+
   next();
 });
 
-const Category = mongoose.model("Category", categorySchema);
-
-export default Category;
+export default mongoose.model("Category", categorySchema);

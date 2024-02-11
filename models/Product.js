@@ -28,9 +28,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    images: {
-      type: [String],
-    },
+    images: [String],
     brandId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",
@@ -62,6 +60,4 @@ productSchema.set("toJSON", {
   }),
 });
 
-const Product = mongoose.model("Product", productSchema);
-
-export default Product;
+export default mongoose.model("Product", productSchema);
