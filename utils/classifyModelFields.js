@@ -5,9 +5,6 @@ const classifyModelfields = (model, exclude = []) => {
     dateFields: [],
     booleanFields: [],
     objectIdFields: [],
-    arrayFields: [],
-    mixedFields: [],
-    bufferFields: [],
     allFields: [],
   };
 

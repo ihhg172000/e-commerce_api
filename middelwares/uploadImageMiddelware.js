@@ -8,7 +8,7 @@ const imageFilter = (req, file, cb) => {
   if (mime.lookup(file.originalname).startsWith("image")) {
     cb(null, true);
   } else {
-    cb(new ApiError(400, "Only image upload is allowed"), false);
+    cb(new ApiError(400, "Only image upload is allowed."), false);
   }
 };
 

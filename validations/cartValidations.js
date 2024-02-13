@@ -29,14 +29,14 @@ const updateCartSchema = cartSchemaGenerator.generate({
   all: { required: false },
 });
 
-const cartItemvalidators = {
+const cartItemValidators = {
   productId: Joi.string().external(
     isExistsAs(Product, "_id", "There is no product with this id"),
   ),
   quantity: Joi.number().min(1),
 };
 
-const cartItemSchemaGenerator = new SchemaGenerator(cartItemvalidators);
+const cartItemSchemaGenerator = new SchemaGenerator(cartItemValidators);
 
 const addItemToCartSchema = cartItemSchemaGenerator.generate({
   quantity: { required: false },

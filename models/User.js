@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import bycrypt from "bcrypt";
+import imageSchema from "./imageSchema.js";
+import hashPassword from "../utils/hashPassword.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -27,7 +28,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     avatar: {
-      type: String,
+      type: imageSchema,
       default: null,
     },
     isSuperuser: {
@@ -54,11 +55,9 @@ userSchema.set("toJSON", {
 });
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
+  if (this.isModified("password")) {
+    this.password = await hashPassword(this.password);
   }
-
-  this.password = await bycrypt.hash(this.password, 12);
 
   next();
 });

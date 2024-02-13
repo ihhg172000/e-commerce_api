@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import imageSchema from "./imageSchema.js";
 import slugify from "slugify";
 
 const brandSchema = new mongoose.Schema(
@@ -15,7 +16,7 @@ const brandSchema = new mongoose.Schema(
       lowercase: true,
     },
     logo: {
-      type: String,
+      type: imageSchema,
       default: null,
     },
   },
@@ -36,11 +37,9 @@ brandSchema.set("toJSON", {
 });
 
 brandSchema.pre("save", function (next) {
-  if (!this.isModified("name")) {
-    return next();
+  if (this.isModified("name")) {
+    this.slug = slugify(this.name);
   }
-
-  this.slug = slugify(this.name);
 
   next();
 });

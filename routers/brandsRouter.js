@@ -1,14 +1,14 @@
 import { Router } from "express";
 import brandsController from "../controllers/brandsController.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 import { authorizeSuperuser } from "../middelwares/authorizationMiddelware.js";
+import uploadImage from "../middelwares/uploadImageMiddelware.js";
+import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
 import validate from "../middelwares/validationMiddelware.js";
 import {
   createBrandSchema,
   updateBrandSchema,
 } from "../validations/brandValidations.js";
-import uploadImage from "../middelwares/uploadImageMiddelware.js";
-import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
-import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 

@@ -1,14 +1,14 @@
 import { Router } from "express";
 import usersController from "../controllers/usersController.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 import { authorizeSuperuser } from "../middelwares/authorizationMiddelware.js";
+import uploadImage from "../middelwares/uploadImageMiddelware.js";
+import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
 import validate from "../middelwares/validationMiddelware.js";
 import {
   createUserSchema,
   updateUserSchema,
 } from "../validations/userValidations.js";
-import uploadImage from "../middelwares/uploadImageMiddelware.js";
-import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
-import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 

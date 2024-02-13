@@ -7,7 +7,7 @@ import { isExistsAs } from "./existenceValidators.js";
 const validators = {
   title: Joi.string().max(256),
   description: Joi.string().max(1024),
-  quantity: Joi.number(),
+  stock: Joi.number(),
   price: Joi.number(),
   brandId: Joi.any().external(
     isExistsAs(Brand, "_id", "No brand was found with this id"),

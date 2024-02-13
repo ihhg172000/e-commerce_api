@@ -1,12 +1,12 @@
 import { Router } from "express";
 import addressesController from "../controllers/addressesController.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 import { authorizeSuperuser } from "../middelwares/authorizationMiddelware.js";
 import validate from "../middelwares/validationMiddelware.js";
 import {
   createAddressSchema,
   updateAddressSchema,
 } from "../validations/addressValidations.js";
-import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 

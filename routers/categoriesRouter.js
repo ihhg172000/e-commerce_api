@@ -1,12 +1,12 @@
 import { Router } from "express";
 import categoriesController from "../controllers/categoriesController.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 import { authorizeSuperuser } from "../middelwares/authorizationMiddelware.js";
 import validate from "../middelwares/validationMiddelware.js";
 import {
   createCategorySchema,
   updateCategorySchema,
 } from "../validations/categoryValidations.js";
-import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 

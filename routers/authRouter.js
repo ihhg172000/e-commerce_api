@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { signUp, signIn } from "../controllers/authController.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 import validate from "../middelwares/validationMiddelware.js";
 import { signUpSchema, signInSchema } from "../validations/userValidations.js";
-import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 

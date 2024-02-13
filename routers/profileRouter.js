@@ -1,11 +1,11 @@
 import { Router } from "express";
 import usersController from "../controllers/usersController.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
+import uploadImage from "../middelwares/uploadImageMiddelware.js";
+import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
 import { authorizeUser } from "../middelwares/authorizationMiddelware.js";
 import validate from "../middelwares/validationMiddelware.js";
 import { updateProfileSchema } from "../validations/userValidations.js";
-import uploadImage from "../middelwares/uploadImageMiddelware.js";
-import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
-import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 

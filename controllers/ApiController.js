@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
-import { findByIdOr404 } from "../utils/mongooseUtils.js";
+import EventEmitter from "events";
+import { findByIdOr404 } from "../utils/findOr404.js";
 import classifyModelFields from "../utils/classifyModelFields.js";
 import QueryBuilder from "../utils/QueryBuilder.js";
 import ResponseBuilder from "../utils/ResponseBuilder.js";
@@ -7,9 +8,11 @@ import ResponseBuilder from "../utils/ResponseBuilder.js";
 class ApiController {
   constructor(model) {
     this.model = model;
+    this.modelName = model.modelName.toLowerCase();
+    this.emitter = new EventEmitter();
   }
 
-  retrieveAll = asyncHandler(async (req, res, next) => {
+  retrieveAll = asyncHandler(async (req, res) => {
     const { search, sort, select, page, limit, ...filter } = req.query;
 
     const query = new QueryBuilder(
@@ -46,52 +49,51 @@ class ApiController {
       .json(
         new ResponseBuilder()
           .withMeta(pagination, "pagination")
-          .withData(docs, this.model.modelName)
+          .withData(docs, this.modelName)
           .build(),
       );
   });
 
-  createOne = asyncHandler(async (req, res, next) => {
+  createOne = asyncHandler(async (req, res) => {
     const doc = await this.model.create(req.body);
 
     res
       .status(201)
-      .json(new ResponseBuilder().withData(doc, this.model.modelName).build());
+      .json(new ResponseBuilder().withData(doc, this.modelName).build());
   });
 
-  retrieveOne = asyncHandler(async (req, res, next) => {
+  retrieveOne = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const doc = id
-      ? await findByIdOr404(this.model, id)
-      : req[this.model.modelName.toLowerCase()];
+    const doc = id ? await findByIdOr404(this.model, id) : req[this.modelName];
 
     res
       .status(200)
-      .json(new ResponseBuilder().withData(doc, this.model.modelName).build());
+      .json(new ResponseBuilder().withData(doc, this.modelName).build());
   });
 
-  updateOne = asyncHandler(async (req, res, next) => {
+  updateOne = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const doc = id
-      ? await findByIdOr404(this.model, id)
-      : req[this.model.modelName.toLowerCase()];
+    const doc = id ? await findByIdOr404(this.model, id) : req[this.modelName];
+    const oldDoc = doc.toObject();
 
     Object.assign(doc, req.body);
 
     await doc.save();
 
+    this.emitter.emit("documentUpdated", oldDoc, doc.toObject());
+
     res
       .status(200)
       .json(new ResponseBuilder().withData(doc, this.model.modelName).build());
   });
 
-  deleteOne = asyncHandler(async (req, res, next) => {
+  deleteOne = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const doc = id
-      ? await findByIdOr404(this.model, id)
-      : req[this.model.modelName.toLowerCase()];
+    const doc = id ? await findByIdOr404(this.model, id) : req[this.modelName];
 
     await doc.deleteOne();
+
+    this.emitter.emit("documentDeleted", doc.toObject());
 
     res.status(204).json(new ResponseBuilder().build());
   });

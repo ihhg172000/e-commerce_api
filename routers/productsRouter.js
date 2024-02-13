@@ -1,14 +1,14 @@
 import { Router } from "express";
 import productsController from "../controllers/productsController.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 import { authorizeSuperuser } from "../middelwares/authorizationMiddelware.js";
+import uploadImage from "../middelwares/uploadImageMiddelware.js";
+import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
 import validate from "../middelwares/validationMiddelware.js";
 import {
   createProductSchema,
   updateProductSchema,
 } from "../validations/productValidations.js";
-import uploadImage from "../middelwares/uploadImageMiddelware.js";
-import resizeAndSaveImage from "../middelwares/resizeAndSaveImageMiddleware.js";
-import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 
@@ -46,6 +46,23 @@ router
     productsController.updateOne,
   )
   .delete(authorizeSuperuser, productsController.deleteOne);
+
+router
+  .route("/:productId/images")
+  .post(
+    uploadImage.single("image"),
+    resizeAndSaveImage({ image: { width: 720, height: 720 } }),
+    productsController.addProductImage,
+  );
+
+router
+  .route("/:productId/images/:imageId")
+  .patch(
+    uploadImage.single("image"),
+    resizeAndSaveImage({ image: { width: 720, height: 720 } }),
+    productsController.updateProductImage,
+  )
+  .delete(productsController.removeProductImage);
 
 router.use(methodNotAllowedHandler);
 

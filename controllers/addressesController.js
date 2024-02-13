@@ -1,23 +1,12 @@
 import asyncHandler from "express-async-handler";
 import ApiController from "./ApiController.js";
 import Address from "../models/Address.js";
-import { findOneOr404 } from "../utils/mongooseUtils.js";
-import ResponseBuilder from "../utils/ResponseBuilder.js";
+import { findOneOr404 } from "../utils/findOr404.js";
 
 class AddressesController extends ApiController {
   constructor() {
     super(Address);
   }
-
-  retrieveAddreasesForAuthUser = (req, res, next) => {
-    req.query.userId = req.user._id;
-    this.retrieveAll(req, res, next);
-  };
-
-  createAddressForAuthUser = (req, res, next) => {
-    req.body.userId = req.user._id;
-    this.createOne(req, res, next);
-  };
 
   findAddressForAuthUser = asyncHandler(async (req, res, next) => {
     const { addressId } = req.params;
@@ -27,6 +16,7 @@ class AddressesController extends ApiController {
     });
 
     req.address = address;
+
     next();
   });
 }

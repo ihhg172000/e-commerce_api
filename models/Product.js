@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import imageSchema from "./imageSchema.js";
 
 const productSchema = new mongoose.Schema(
   {
@@ -14,21 +15,26 @@ const productSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    quantity: {
-      type: Number,
-      min: 0,
-      required: true,
-    },
     price: {
       type: Number,
       min: 0,
       required: true,
     },
+    stock: {
+      type: Number,
+      min: 0,
+      required: true,
+    },
+    sold: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
     coverImage: {
-      type: String,
+      type: imageSchema,
       default: null,
     },
-    images: [String],
+    images: [imageSchema],
     brandId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",
@@ -51,6 +57,8 @@ productSchema.set("toJSON", {
     title: doc.title,
     description: doc.description,
     price: doc.price,
+    stock: doc.stock,
+    sold: doc.sold,
     coverImage: doc.coverImage,
     images: doc.images,
     brandId: doc.brandId,

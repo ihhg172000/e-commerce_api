@@ -1,7 +1,6 @@
-import asyncHandler from "express-async-handler";
 import ApiController from "./ApiController.js";
 import User from "../models/User.js";
-import ResponseBuilder from "../utils/ResponseBuilder.js";
+import { deleteFile } from "../utils/deleteFiles.js";
 
 class UsersController extends ApiController {
   constructor() {
@@ -9,4 +8,18 @@ class UsersController extends ApiController {
   }
 }
 
-export default new UsersController();
+const usersController = new UsersController();
+
+usersController.emitter.on("documentUpdated", (oldDoc, updatedDoc) => {
+  if (oldDoc.avatar && oldDoc.avatar.path !== updatedDoc.avatar.path) {
+    deleteFile(oldDoc.avatar.path);
+  }
+});
+
+usersController.emitter.on("documentDeleted", (doc) => {
+  if (doc.avatar) {
+    deleteFile(doc.avatar.path);
+  }
+});
+
+export default usersController;

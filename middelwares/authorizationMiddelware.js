@@ -30,6 +30,7 @@ const authorize = (superuser = false) =>
       }
 
       req.user = user;
+
       next();
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {

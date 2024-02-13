@@ -10,7 +10,6 @@ const itemSchema = new mongoose.Schema({
   quantity: {
     type: Number,
     min: 1,
-    default: 1,
   },
 });
 
@@ -64,13 +63,11 @@ cartSchema.set("toJSON", {
 cartSchema.plugin(autoPopulate);
 
 cartSchema.pre("save", async function (next) {
-  if (!this.isModified("items")) {
-    return next();
+  if (this.isModified("items")) {
+    this.totalPrice = this.items.reduce((totalPrice, item) => {
+      return totalPrice + item.product.price * item.quantity;
+    }, 0);
   }
-
-  this.totalPrice = this.items.reduce((totalPrice, item) => {
-    return totalPrice + item.product.price * item.quantity;
-  }, 0);
 
   next();
 });

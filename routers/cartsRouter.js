@@ -1,5 +1,6 @@
 import { Router } from "express";
 import cartsController from "../controllers/cartsController.js";
+import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 import { authorizeSuperuser } from "../middelwares/authorizationMiddelware.js";
 import validate from "../middelwares/validationMiddelware.js";
 import {
@@ -8,7 +9,6 @@ import {
   addItemToCartSchema,
   updateCartItemSchema,
 } from "../validations/cartValidations.js";
-import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 
 const router = Router();
 
@@ -27,12 +27,12 @@ router
 
 router
   .route("/:cartId/items")
-  .post(validate(addItemToCartSchema), cartsController.addItemToCart);
+  .post(validate(addItemToCartSchema), cartsController.addCartItem);
 
 router
   .route("/:cartId/items/:itemId")
-  .patch(validate(updateCartItemSchema), cartsController.updateItemWithinCart)
-  .delete(cartsController.removeItemFromCart);
+  .patch(validate(updateCartItemSchema), cartsController.updateCartItem)
+  .delete(cartsController.removeCartItem);
 
 router.use(methodNotAllowedHandler);
 
