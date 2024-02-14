@@ -20,7 +20,7 @@ const addressSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    state: {
+    region: {
       type: String,
       maxLength: 128,
       trim: true,

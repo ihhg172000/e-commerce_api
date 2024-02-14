@@ -10,6 +10,9 @@ import cartsRouter from "./routers/cartsRouter.js";
 import brandsRouter from "./routers/brandsRouter.js";
 import categoriesRouter from "./routers/categoriesRouter.js";
 import productsRouter from "./routers/productsRouter.js";
+import countriesRouter from "./routers/countriesRouter.js";
+import regionsRouter from "./routers/regionsRouter.js";
+import citiesRouter from "./routers/citiesRouter.js";
 import notFoundHandler from "./middelwares/notFoundHandler.js";
 import errorHandler from "./middelwares/errorHandler.js";
 
@@ -32,6 +35,9 @@ app.use("/api/v1/carts", cartsRouter);
 app.use("/api/v1/brands", brandsRouter);
 app.use("/api/v1/categories", categoriesRouter);
 app.use("/api/v1/products", productsRouter);
+app.use("/api/v1/countries", countriesRouter);
+app.use("/api/v1/regions", regionsRouter);
+app.use("/api/v1/cities", citiesRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
