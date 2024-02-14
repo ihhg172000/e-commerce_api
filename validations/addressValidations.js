@@ -7,7 +7,7 @@ const validators = {
   alias: Joi.string().max(128),
   street: Joi.string().max(256),
   city: Joi.string().max(128),
-  state: Joi.string().max(128),
+  region: Joi.string().max(128),
   country: Joi.string().max(128),
   postalCode: Joi.string().max(32),
   phone: Joi.string().max(32),

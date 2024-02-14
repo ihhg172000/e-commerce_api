@@ -29,6 +29,14 @@ const countrySchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
+    postalCodePattern: {
+      type: String,
+      default: null,
+    },
+    phonePattern: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true },
 );
@@ -41,6 +49,8 @@ countrySchema.set("toJSON", {
       isoCode: doc.isoCode,
       phoneCode: doc.phoneCode,
       currency: doc.currency,
+      postalCodePattern: doc.postalCodePattern,
+      phonePattern: doc.phonePattern,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };

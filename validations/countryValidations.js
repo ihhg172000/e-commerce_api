@@ -24,11 +24,17 @@ const validators = {
       ),
     ),
   currency: Joi.string().max(3),
+  postalCodePattern: Joi.string(),
+  phonePattern: Joi.string(),
 };
 
 const countrySchemaGenerator = new SchemaGenerator(validators);
 
-const createCountrySchema = countrySchemaGenerator.generate();
+const createCountrySchema = countrySchemaGenerator.generate({
+  postalCodePattern: { required: false },
+  phonePattern: { required: false },
+});
+
 const updateCountrySchema = countrySchemaGenerator.generate({
   all: { required: false },
 });
