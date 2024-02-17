@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import autoPopulate from "mongoose-autopopulate";
+import priceSchema from "./priceSchema.js";
 
 const citySchema = new mongoose.Schema(
   {
@@ -11,13 +11,12 @@ const citySchema = new mongoose.Schema(
       required: true,
     },
     shippingPrice: {
-      type: Number,
-      min: 0,
+      type: priceSchema,
       required: true,
     },
-    regionId: {
+    stateId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Region",
+      ref: "State",
       required: true,
     },
     countryId: {
@@ -29,36 +28,18 @@ const citySchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-citySchema.virtual("region", {
-  ref: "Region",
-  localField: "regionId",
-  foreignField: "_id",
-  justOne: true,
-  autopopulate: { select: "name isoCode" },
-});
-
-citySchema.virtual("country", {
-  ref: "Country",
-  localField: "countryId",
-  foreignField: "_id",
-  justOne: true,
-  autopopulate: { select: "name isoCode" },
-});
-
 citySchema.set("toJSON", {
   transform: (doc) => {
     return {
       id: doc._id,
       name: doc.name,
       shippingPrice: doc.shippingPrice,
-      region: doc.region,
-      country: doc.country,
+      stateId: doc.stateId,
+      countryId: doc.countryId,
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };
   },
 });
-
-citySchema.plugin(autoPopulate);
 
 export default mongoose.model("City", citySchema);

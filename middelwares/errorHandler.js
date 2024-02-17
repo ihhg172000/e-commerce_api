@@ -1,6 +1,7 @@
 import ResponseBuilder from "../utils/ResponseBuilder.js";
 
 const errorHandler = (err, req, res, next) => {
+  console.log(err);
   const { statusCode = 500, message, errors } = err;
 
   res

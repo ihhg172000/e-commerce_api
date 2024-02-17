@@ -56,6 +56,7 @@ class ApiController {
 
   createOne = asyncHandler(async (req, res) => {
     const doc = await this.model.create(req.body);
+    this.emitter.emit("documentCreated", doc.toObject());
 
     res
       .status(201)
@@ -64,7 +65,7 @@ class ApiController {
 
   retrieveOne = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const doc = id ? await findByIdOr404(this.model, id) : req[this.modelName];
+    const doc = await this._findByIdOrInRequest(id, req);
 
     res
       .status(200)
@@ -73,13 +74,12 @@ class ApiController {
 
   updateOne = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const doc = id ? await findByIdOr404(this.model, id) : req[this.modelName];
+    const doc = await this._findByIdOrInRequest(id, req);
     const oldDoc = doc.toObject();
 
     Object.assign(doc, req.body);
 
     await doc.save();
-
     this.emitter.emit("documentUpdated", oldDoc, doc.toObject());
 
     res
@@ -89,14 +89,17 @@ class ApiController {
 
   deleteOne = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const doc = id ? await findByIdOr404(this.model, id) : req[this.modelName];
+    const doc = await this._findByIdOrInRequest(id, req);
 
     await doc.deleteOne();
-
     this.emitter.emit("documentDeleted", doc.toObject());
 
     res.status(204).json(new ResponseBuilder().build());
   });
+
+  async _findByIdOrInRequest(id, req) {
+    return id ? await findByIdOr404(this.model, id) : req[this.modelName];
+  }
 }
 
 export default ApiController;

@@ -4,6 +4,7 @@ import methodNotAllowedHandler from "../middelwares/methodNotAllowedHandler.js";
 import { authorizeUser } from "../middelwares/authorizationMiddelware.js";
 import validate from "../middelwares/validationMiddelware.js";
 import {
+  authUserUpdateCartSchema,
   addItemToCartSchema,
   updateCartItemSchema,
 } from "../validations/cartValidations.js";
@@ -16,7 +17,7 @@ router.use(cartsController.findOrCreateAuthUserCart);
 router
   .route("/")
   .get(cartsController.retrieveOne)
-  .patch(cartsController.updateOne)
+  .patch(validate(authUserUpdateCartSchema), cartsController.updateOne)
   .delete(cartsController.deleteOne);
 
 router

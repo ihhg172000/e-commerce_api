@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import priceSchema from "./priceSchema.js";
 import imageSchema from "./imageSchema.js";
 
 const productSchema = new mongoose.Schema(
@@ -16,8 +17,7 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     price: {
-      type: Number,
-      min: 0,
+      type: priceSchema,
       required: true,
     },
     stock: {

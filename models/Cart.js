@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import autoPopulate from "mongoose-autopopulate";
+import Product from "./Product.js";
 
 const itemSchema = new mongoose.Schema({
   productId: {
@@ -10,6 +11,7 @@ const itemSchema = new mongoose.Schema({
   quantity: {
     type: Number,
     min: 1,
+    required: true,
   },
 });
 
@@ -22,7 +24,6 @@ itemSchema.virtual("product", {
 });
 
 itemSchema.set("toJSON", {
-  virtuals: true,
   transform: (doc) => ({
     id: doc._id,
     product: doc.product,
@@ -64,8 +65,10 @@ cartSchema.plugin(autoPopulate);
 
 cartSchema.pre("save", async function (next) {
   if (this.isModified("items")) {
+    await this.populate("items.productId");
+
     this.totalPrice = this.items.reduce((totalPrice, item) => {
-      return totalPrice + item.product.price * item.quantity;
+      return totalPrice + item.productId.price.amount * item.quantity;
     }, 0);
   }
 

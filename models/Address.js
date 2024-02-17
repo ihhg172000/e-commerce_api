@@ -20,7 +20,7 @@ const addressSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    region: {
+    state: {
       type: String,
       maxLength: 128,
       trim: true,
@@ -42,7 +42,7 @@ const addressSchema = new mongoose.Schema(
       type: String,
       maxLength: 32,
       trim: true,
-      default: null,
+      required: true,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

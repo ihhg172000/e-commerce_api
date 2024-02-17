@@ -7,7 +7,7 @@ const validators = {
   alias: Joi.string().max(128),
   street: Joi.string().max(256),
   city: Joi.string().max(128),
-  region: Joi.string().max(128),
+  state: Joi.string().max(128),
   country: Joi.string().max(128),
   postalCode: Joi.string().max(32),
   phone: Joi.string().max(32),
@@ -20,7 +20,6 @@ const addressSchemaGenerator = new SchemaGenerator(validators);
 
 const createAddressSchema = addressSchemaGenerator.generate({
   alias: { required: false },
-  phone: { required: false },
 });
 
 const updateAddressSchema = addressSchemaGenerator.generate({
@@ -29,7 +28,6 @@ const updateAddressSchema = addressSchemaGenerator.generate({
 
 const authUserCreateAddressSchema = addressSchemaGenerator.generate({
   alias: { required: false },
-  phone: { required: false },
   userId: { validate: false },
 });
 

@@ -29,6 +29,11 @@ const updateCartSchema = cartSchemaGenerator.generate({
   all: { required: false },
 });
 
+const authUserUpdateCartSchema = cartSchemaGenerator.generate({
+  all: { required: false },
+  userId: { validate: false },
+});
+
 const cartItemValidators = {
   productId: Joi.string().external(
     isExistsAs(Product, "_id", "There is no product with this id"),
@@ -50,6 +55,7 @@ const updateCartItemSchema = cartItemSchemaGenerator.generate({
 export {
   createCartSchema,
   updateCartSchema,
+  authUserUpdateCartSchema,
   addItemToCartSchema,
   updateCartItemSchema,
 };

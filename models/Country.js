@@ -23,12 +23,6 @@ const countrySchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    currency: {
-      type: String,
-      maxLength: 3,
-      trim: true,
-      required: true,
-    },
     postalCodePattern: {
       type: String,
       default: null,
@@ -48,7 +42,6 @@ countrySchema.set("toJSON", {
       name: doc.name,
       isoCode: doc.isoCode,
       phoneCode: doc.phoneCode,
-      currency: doc.currency,
       postalCodePattern: doc.postalCodePattern,
       phonePattern: doc.phonePattern,
       createdAt: doc.createdAt,

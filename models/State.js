@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const regionSchema = new mongoose.Schema(
+const stateSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -25,7 +25,7 @@ const regionSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-regionSchema.set("toJSON", {
+stateSchema.set("toJSON", {
   transform: (doc) => {
     return {
       id: doc._id,
@@ -38,4 +38,4 @@ regionSchema.set("toJSON", {
   },
 });
 
-export default mongoose.model("Region", regionSchema);
+export default mongoose.model("State", stateSchema);

@@ -8,7 +8,10 @@ const validators = {
   title: Joi.string().max(256),
   description: Joi.string().max(1024),
   stock: Joi.number(),
-  price: Joi.number(),
+  price: Joi.object({
+    amount: Joi.number().min(0).required(),
+    currency: Joi.string().max(3).required(),
+  }),
   brandId: Joi.any().external(
     isExistsAs(Brand, "_id", "No brand was found with this id"),
   ),

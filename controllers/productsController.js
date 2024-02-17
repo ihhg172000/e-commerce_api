@@ -1,7 +1,6 @@
 import asyncHandler from "express-async-handler";
 import ApiController from "./ApiController.js";
 import Product from "../models/Product.js";
-import { findByIdOr404 } from "../utils/findOr404.js";
 import ApiError from "../utils/ApiError.js";
 import ResponseBuilder from "../utils/ResponseBuilder.js";
 import { deleteFiles, deleteFile } from "../utils/deleteFiles.js";
@@ -14,6 +13,7 @@ class ProductsController extends ApiController {
   addProductImage = asyncHandler(async (req, res) => {
     const { productId } = req.params;
     const product = await findByIdOr404(Product, productId);
+    const oldProduct = product.toObject();
 
     if (product.images.length < 4) {
       product.images.push(req.body.image);
@@ -25,6 +25,7 @@ class ProductsController extends ApiController {
     }
 
     await product.save();
+    this.emitter.emit("documentUpdated", oldProduct, product.toObject());
 
     res
       .status(201)
@@ -34,7 +35,6 @@ class ProductsController extends ApiController {
   updateProductImage = asyncHandler(async (req, res) => {
     const { productId, imageId } = req.params;
     const product = await findByIdOr404(Product, productId);
-
     const oldProduct = product.toObject();
 
     const imageIndex = product.images.findIndex(
@@ -51,7 +51,6 @@ class ProductsController extends ApiController {
     Object.assign(product.images[imageIndex], req.body.image);
 
     await product.save();
-
     this.emitter.emit("documentUpdated", oldProduct, product.toObject());
 
     res
@@ -62,7 +61,6 @@ class ProductsController extends ApiController {
   removeProductImage = asyncHandler(async (req, res) => {
     const { productId, imageId } = req.params;
     const product = await findByIdOr404(Product, productId);
-
     const oldProduct = product.toObject();
 
     const imageIndex = product.images.findIndex(
@@ -79,7 +77,6 @@ class ProductsController extends ApiController {
     product.images.splice(imageIndex, 1);
 
     await product.save();
-
     this.emitter.emit("documentUpdated", oldProduct, product.toObject());
 
     res
@@ -90,30 +87,33 @@ class ProductsController extends ApiController {
 
 const productsController = new ProductsController();
 
-productsController.emitter.on("documentUpdated", (oldDoc, updatedDoc) => {
-  if (
-    oldDoc.coverImage &&
-    oldDoc.coverImage.path !== updatedDoc.coverImage.path
-  ) {
-    deleteFile(oldDoc.coverImage.path);
+productsController.emitter.on(
+  "documentUpdated",
+  (oldProduct, updatedProduct) => {
+    if (
+      oldProduct.coverImage &&
+      oldProduct.coverImage.path !== updatedProduct.coverImage.path
+    ) {
+      deleteFile(oldProduct.coverImage.path);
+    }
+
+    const oldImagePaths = oldProduct.images.map((image) => image.path);
+    const updatedImagePaths = updatedProduct.images.map((image) => image.path);
+
+    const unusedImagePaths = oldImagePaths.filter(
+      (item) => !updatedImagePaths.includes(item),
+    );
+
+    deleteFiles(unusedImagePaths);
+  },
+);
+
+productsController.emitter.on("documentDeleted", (product) => {
+  if (product.coverImage) {
+    deleteFile(product.coverImage.path);
   }
 
-  const oldImagePaths = oldDoc.images.map((image) => image.path);
-  const updatedImagePaths = updatedDoc.images.map((image) => image.path);
-
-  const unusedImagePaths = oldImagePaths.filter(
-    (item) => !updatedImagePaths.includes(item),
-  );
-
-  deleteFiles(unusedImagePaths);
-});
-
-productsController.emitter.on("documentDeleted", (doc) => {
-  if (doc.coverImage) {
-    deleteFile(doc.coverImage.path);
-  }
-
-  const imagePaths = doc.images.map((image) => image.path);
+  const imagePaths = product.images.map((image) => image.path);
 
   deleteFiles(imagePaths);
 });

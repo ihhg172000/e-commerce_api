@@ -23,7 +23,6 @@ const validators = {
         "There is a country with this phoneCode",
       ),
     ),
-  currency: Joi.string().max(3),
   postalCodePattern: Joi.string(),
   phonePattern: Joi.string(),
 };

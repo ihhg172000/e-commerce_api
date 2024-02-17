@@ -50,6 +50,7 @@ router
 router
   .route("/:productId/images")
   .post(
+    authorizeSuperuser,
     uploadImage.single("image"),
     resizeAndSaveImage({ image: { width: 720, height: 720 } }),
     productsController.addProductImage,
@@ -58,6 +59,7 @@ router
 router
   .route("/:productId/images/:imageId")
   .patch(
+    authorizeSuperuser,
     uploadImage.single("image"),
     resizeAndSaveImage({ image: { width: 720, height: 720 } }),
     productsController.updateProductImage,

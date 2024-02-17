@@ -1,7 +1,6 @@
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import config from "../config.js";
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import ApiError from "../utils/ApiError.js";
