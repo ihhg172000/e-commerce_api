@@ -6,4 +6,8 @@ const connectDatabase = async () => {
   console.log(`database is connected`);
 };
 
-export default connectDatabase;
+const closeDatabase = () => {
+  mongoose.connection.close();
+};
+
+export { connectDatabase, closeDatabase };

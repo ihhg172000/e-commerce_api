@@ -76,6 +76,7 @@ shippingAddressSchema.set("toJSON", {
     street: doc.street,
     city: doc.city,
     state: doc.state,
+    country: doc.country,
     postalCode: doc.postalCode,
     phone: doc.phone,
   }),
